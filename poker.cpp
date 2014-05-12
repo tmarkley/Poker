@@ -58,7 +58,7 @@ void drawWindow()
   glClear(GL_COLOR_BUFFER_BIT);
 
   glColor3f(.35, .59, .999);
-  drawTexture(loadTexture("backgrounds/welcomescreen.pam"), 0, 0, glutGet(), glutGetWindowHeight());
+  drawTexture(loadTexture("backgrounds/welcomescreen.pam"), 0, 0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
   // drawBox(0, 0, 850, 650);
   // drawTexture(loadTexture("cards/A_hearts.pam"), 0, 0, 200, 286, 1, pi/4);
 

@@ -48,16 +48,16 @@ poker.o:   poker.cpp
 # 	g++ -g $(MACOSX_DEFINE) -c datacontroller.cpp
 
 drawingfunctions.o:   drawingfunctions.cpp
-	g++ -g -c drawingfunctions.cpp
+	g++ $(OPTS) -g -c drawingfunctions.cpp
 
 # building.o:   building.h building.cpp
 # 	g++ -g -c building.cpp
 
 button.o:   button.cpp button.h
-	g++ -g -c button.cpp
+	g++ $(OPTS) -g -c button.cpp
 
 texture.o:   texture.cpp texture.h
-	g++ -g -c texture.cpp
+	g++ $(OPTS) -g -c texture.cpp
 
 # # sound.o: sound.cpp sound.h
 # # 	g++ $(OPTS) -c sound.cpp
