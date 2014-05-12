@@ -19,7 +19,9 @@ using namespace std;
 
 bool mouseIsDragging = false;
 
-int WIDTH = 1000;  // width of the user window (640 + 80)
+bool fullscreen = false;
+
+int WIDTH = 1200;  // width of the user window (640 + 80)
 int HEIGHT = 750;  // height of the user window (480 + 60)
 char programName[] = "Poker";
 
@@ -56,8 +58,9 @@ void drawWindow()
   glClear(GL_COLOR_BUFFER_BIT);
 
   glColor3f(.35, .59, .999);
+  drawTexture(loadTexture("backgrounds/welcomescreen.pam"), 0, 0, glutGet(), glutGetWindowHeight());
   // drawBox(0, 0, 850, 650);
-  drawTexture(loadTexture("cards/A_hearts.pam"), 0, 0, 200, 286, 1, pi/4);
+  // drawTexture(loadTexture("cards/A_hearts.pam"), 0, 0, 200, 286, 1, pi/4);
 
   // draw stuff
   //draw the current screen that we are on
@@ -71,10 +74,21 @@ void drawWindow()
 // process keyboard events
 void keyboard( unsigned char c, int x, int y )
 {
-  //int win = glutGetWindow();
+  int win = glutGetWindow();
   // screens[currentScreen]->setTextBoxText(c);
-    /*
-    switch(c) {
+    
+  switch(c) {
+    case 'F':
+    case 'f':
+      if (!fullscreen)  {
+        glutFullScreen();
+        fullscreen = true;
+      }
+      else {
+        glutReshapeWindow(WIDTH,HEIGHT);
+        fullscreen = false;
+      }
+      break;
     case 'q':
     case 'Q':
     case 27:
@@ -84,7 +98,7 @@ void keyboard( unsigned char c, int x, int y )
       break;
     default:
       break;
-      }*/
+  }
   glutPostRedisplay();
 }
 
@@ -94,10 +108,10 @@ void keyboard( unsigned char c, int x, int y )
 void reshape(int w, int h)
 {
    glViewport(0, 0, (GLsizei) w, (GLsizei) h);
-   WIDTH = w;  HEIGHT = h;
+   // WIDTH = w;  HEIGHT = h;
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
-   glOrtho(0., WIDTH-1, HEIGHT-1, 0., -1.0, 1.0);
+   glOrtho(0., w-1, h-1, 0., -1.0, 1.0);
 }
 
 // the mouse function is called when a mouse button is pressed down or released
@@ -160,6 +174,12 @@ void init(void)
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glOrtho(0., WIDTH-1, HEIGHT-1, 0., -1.0, 1.0);
+
+  // Set the clipping volume
+  // gluPerspective(45, 0.75, 0.1, 1000);
+  // glMatrixMode(GL_MODELVIEW);
+  // glLoadIdentity();
+  // gluLookAt(0, 1.75, 5, 0, 1.75, 6, 0.0f, 1.0f, 0.0f);
 
   // welcome message
   cout << "Welcome to " << programName << "." << endl;
