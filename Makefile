@@ -11,10 +11,10 @@ else
  LIBS = -I/usr/common/include -I/usr/include/GL -L/System/Library/Frameworks/OpenGL.framework/Libraries -framework GLUT -framework OpenGL -lGL -lm -lobjc -lstdc++
 
 endif
-Poker:   poker.o drawingfunctions.o button.o texture.o
+Poker: poker.o drawingfunctions.o button.o texture.o
 	g++ $(OPTS) -o Poker poker.o drawingfunctions.o button.o texture.o $(LIBS)
 
-poker.o:   poker.cpp
+poker.o: poker.cpp
 	g++ $(OPTS) $(MACOSX_DEFINE) -c  poker.cpp 
 
 # screen.o:   screen.cpp screen.h
@@ -47,17 +47,17 @@ poker.o:   poker.cpp
 # datacontroller.o:   datacontroller.h datacontroller.cpp
 # 	g++ -g $(MACOSX_DEFINE) -c datacontroller.cpp
 
-drawingfunctions.o:   drawingfunctions.cpp
-	g++ -g -c drawingfunctions.cpp
+drawingfunctions.o: drawingfunctions.cpp
+	g++ -g $(OPTS) $(MACOSX_DEFINE) -c drawingfunctions.cpp
 
 # building.o:   building.h building.cpp
 # 	g++ -g -c building.cpp
 
-button.o:   button.cpp button.h
-	g++ -g -c button.cpp
+button.o: button.cpp button.h
+	g++ -g $(OPTS) $(MACOSX_DEFINE) -c button.cpp
 
-texture.o:   texture.cpp texture.h
-	g++ -g -c texture.cpp
+texture.o: texture.cpp texture.h
+	g++ -g $(OPTS) $(MACOSX_DEFINE) -c texture.cpp
 
 # # sound.o: sound.cpp sound.h
 # # 	g++ $(OPTS) -c sound.cpp
