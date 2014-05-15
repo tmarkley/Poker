@@ -6,7 +6,7 @@
 #include <GL/glut.h>
 #endif
 #include <iostream>
-// #include "welcomescreen.h"
+#include "welcomescreen.h"
 // #include "levelscreen.h"
 // #include "generalscreen.h"
 // #include "mainscreen.h"
@@ -40,11 +40,11 @@ char programName[] = "Poker";
 // ScreenType currentScreen =  WELCOME_SCREEN;//holds the current screen that we are on - intializes to the welcome screen
 
 //initializes the data controller that does the main handling of the program... all the innards
-// DataController dataController;
+DataController dataController;
 
 //instantiates all the screens, saying whether or not to include the logo at the top
 // MainScreen mainscreen(&dataController, false);
-// WelcomeScreen welcomescreen(&dataController, true);
+WelcomeScreen welcomescreen(&dataController);
 // LevelScreen levelscreen(&dataController, true);
 // GeneralScreen generalscreen(&dataController, true);
 // Screen *screens[4] = {&welcomescreen, &levelscreen, &generalscreen, &mainscreen};
@@ -57,14 +57,14 @@ void drawWindow()
   // clear the buffer
   glClear(GL_COLOR_BUFFER_BIT);
 
-  glColor3f(.35, .59, .999);
-  drawTexture(loadTexture("backgrounds/welcomescreen.pam"), 0, 0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+  // glColor3f(.35, .59, .999);
+  // drawTexture(loadTexture("backgrounds/welcomescreen.pam"), 0, 0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
   // drawBox(0, 0, 850, 650);
   // drawTexture(loadTexture("cards/A_hearts.pam"), 0, 0, 200, 286, 1, pi/4);
 
   // draw stuff
   //draw the current screen that we are on
-  // screens[currentScreen] -> draw();
+  welcomescreen.draw();
 
   // tell the graphics card that we're done-- go ahead and draw!
   //   (technically, we are switching between two color buffers...)
@@ -105,22 +105,25 @@ void keyboard( unsigned char c, int x, int y )
 // the reshape function handles the case where the user changes the size
 //   of the window.  We need to fix the coordinate
 //   system, so that the drawing area is still the unit square.
-void reshape(int w, int h)
+void reshape(GLsizei w, GLsizei h)
 {
-   glViewport(0, 0, (GLsizei) w, (GLsizei) h);
-   // WIDTH = w;  HEIGHT = h;
-   glMatrixMode(GL_PROJECTION);
-   glLoadIdentity();
-   glOrtho(0., w-1, h-1, 0., -1.0, 1.0);
+  // double ratio = WIDTH/HEIGHT;
+  glViewport(0, 0, (GLsizei) w, (GLsizei) h);
+  // // WIDTH = w;  HEIGHT = h;
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glOrtho(0., w, h, 0., -1.0, 1.0);
+
 }
 
 // the mouse function is called when a mouse button is pressed down or released
 void mouse(int button, int state, int x, int y)
 {
+  cout << "x: " << x << ", y: " << y << endl;
   if ( GLUT_LEFT_BUTTON == button ) {
     if ( GLUT_DOWN == state ) { // the user just pressed down on the mouse-- do something
       mouseIsDragging = true;
-      // int newScreen = screens[currentScreen]->didClickButton(x, y);
+      welcomescreen.didClickButton(x, y);
     //   if (currentScreen != MAIN_SCREEN) {//if not on the main screen, should use these buttons to advance through the screens, else they are on the main screen buttons
     //     if (currentScreen == WELCOME_SCREEN && newScreen == MAIN_SCREEN)
     //       mainscreen.generateDetailButtonsForLoadGame();
@@ -158,7 +161,7 @@ void mouse_motion(int x,int y)  {
   currentMousePosition[0] = x;
   currentMousePosition[1] = x;
 
-  // screens[currentScreen] -> isOnButton(x, y);
+  welcomescreen.isOnButton(x, y);
   
   glutPostRedisplay();
 }
@@ -166,6 +169,11 @@ void mouse_motion(int x,int y)  {
 // the init function sets up the graphics card to draw properly
 void init(void)
 {
+
+  // enable transparency for TRANSPARENT buttons.. aww yeah.
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
   // clear the window to black
   glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
@@ -173,7 +181,7 @@ void init(void)
   // set up the coordinate system:  number of pixels along x and y
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  glOrtho(0., WIDTH-1, HEIGHT-1, 0., -1.0, 1.0);
+  glOrtho(0., WIDTH, HEIGHT, 0., -1.0, 1.0);
 
   // Set the clipping volume
   // gluPerspective(45, 0.75, 0.1, 1000);

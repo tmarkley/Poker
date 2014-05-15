@@ -40,6 +40,10 @@ void Button::init(int theWidth, int theHeight, int thePositionX, int thePosition
   colorClicked.push_back(.30);
   colorClicked.push_back(.31);
 
+  alpha = 1.0;
+  alphaChange = 1.0;
+  alphaClicked = 1.0;
+
   isOnButton = false;
   isClick = false;
   
@@ -58,18 +62,33 @@ Button::Button(string theText, int theWidth, int theHeight, int thePositionX, in
 
 }  
 
+Button::Button(string theText, int theWidth, int theHeight, int thePositionX, int thePositionY, double red,
+               double green, double blue, double a, double aCh, double aCl) {
+  
+  init(theWidth, theHeight, thePositionX, thePositionY);
+  setColor(red, green, blue);
+  setChangeColor(red, green, blue);
+  setClickedColor(red, green, blue);
+  alpha = a;
+  alphaChange = aCh;
+  alphaClicked = aCl;
+  text = theText;
+
+}
 
 void Button::draw(int leftScreenX){
 
+  glEnable(GL_BLEND);
+
   if (isOnButton) {
     if (isClick) {
-      glColor3f(colorClicked[0], colorClicked[1], colorClicked[2]);
+      glColor4f(colorClicked[0], colorClicked[1], colorClicked[2], alphaClicked);
     }
     else
-      glColor3f(colorChange[0], colorChange[1], colorChange[2]);
+      glColor4f(colorChange[0], colorChange[1], colorChange[2], alphaChange);
   }
   else
-    glColor3f(color[0], color[1], color[2]);
+    glColor4f(color[0], color[1], color[2], alpha);
 
   if (leftScreenX != oldOffset) {
     int amountToMovePosition = (oldOffset - leftScreenX);
@@ -84,7 +103,8 @@ void Button::draw(int leftScreenX){
   glVertex2f(positionX + width, positionY);  // upper right
   glEnd();
 
-  if(text != ""){//if there is text to draw
+  if(text.length() > 0){//if there is text to draw
+    // cout << "drawing text " << text << endl;
     glColor3f(0,0,0);
     drawText(text.c_str(), leftScreenX);
     }
@@ -112,6 +132,24 @@ void Button::setClickedColor(double red, double green, double blue) {
   colorClicked[1] = green;
   colorClicked[2] = blue;
 
+}
+
+void Button::setAlpha(double a) {
+
+  alpha = a;
+
+}
+
+void Button::setAlphaChange(double a) {
+
+  alphaChange = a;
+  
+}
+
+void Button::setAlphaClicked(double a) {
+
+  alphaClicked = a;
+  
 }
 
 bool Button::isOverButton(int x, int y) {

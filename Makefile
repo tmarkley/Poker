@@ -11,20 +11,20 @@ else
  LIBS = -I/usr/common/include -I/usr/include/GL -L/System/Library/Frameworks/OpenGL.framework/Libraries -framework GLUT -framework OpenGL -lGL -lm -lobjc -lstdc++
 
 endif
-Poker: poker.o drawingfunctions.o button.o texture.o
-	g++ $(OPTS) -o Poker poker.o drawingfunctions.o button.o texture.o $(LIBS)
+Poker: poker.o screen.o welcomescreen.o datacontroller.o drawingfunctions.o button.o texture.o
+	g++ $(OPTS) $(MACOSX_DEFINE) -o Poker poker.o screen.o welcomescreen.o datacontroller.o drawingfunctions.o button.o texture.o $(LIBS)
 
 poker.o: poker.cpp
-	g++ $(OPTS) $(MACOSX_DEFINE) -c  poker.cpp 
+	g++ $(OPTS) -c poker.cpp 
 
-# screen.o:   screen.cpp screen.h
-# 	g++ -g -c screen.cpp
+screen.o:   screen.cpp screen.h
+	g++ $(OPTS) -c screen.cpp
 
 # mainscreen.o:   mainscreen.cpp mainscreen.h
 # 	g++ -g -c mainscreen.cpp
 
-# welcomescreen.o:   welcomescreen.h welcomescreen.cpp
-# 	g++ -g -c welcomescreen.cpp
+welcomescreen.o:   welcomescreen.h welcomescreen.cpp
+	g++ $(OPTS) -c welcomescreen.cpp
 
 # levelscreen.o:   levelscreen.h levelscreen.cpp
 # 	g++ -g -c levelscreen.cpp
@@ -44,20 +44,20 @@ poker.o: poker.cpp
 # entertainmentbuilding.o:   entertainmentbuilding.h entertainmentbuilding.cpp
 # 	g++ -g -c entertainmentbuilding.cpp
 
-# datacontroller.o:   datacontroller.h datacontroller.cpp
-# 	g++ -g $(MACOSX_DEFINE) -c datacontroller.cpp
+datacontroller.o:   datacontroller.h datacontroller.cpp
+	g++ $(OPTS) -c datacontroller.cpp
 
 drawingfunctions.o: drawingfunctions.cpp
-	g++ -g $(OPTS) $(MACOSX_DEFINE) -c drawingfunctions.cpp
+	g++ $(OPTS) -c drawingfunctions.cpp
 
 # building.o:   building.h building.cpp
 # 	g++ -g -c building.cpp
 
 button.o: button.cpp button.h
-	g++ -g $(OPTS) $(MACOSX_DEFINE) -c button.cpp
+	g++ $(OPTS) -c button.cpp
 
 texture.o: texture.cpp texture.h
-	g++ -g $(OPTS) $(MACOSX_DEFINE) -c texture.cpp
+	g++ $(OPTS) -c texture.cpp
 
 # # sound.o: sound.cpp sound.h
 # # 	g++ $(OPTS) -c sound.cpp

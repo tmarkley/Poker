@@ -13,7 +13,7 @@
 
 using namespace std;
 
-const float DEG2RAD = 3.14159/180;
+// const float DEG2RAD = 3.14159/180;
 
 void drawBox(double x, double y, double width, double height) {
 
@@ -182,7 +182,7 @@ void drawSemi(double * pos){
 void drawText(string textVal, int positionX, int positionY) {
 
   int length = textVal.length();
-  int numPixels = length * 4;
+  // int numPixels = length * 4;
   glRasterPos2f( positionX, positionY );
   const char *text = textVal.c_str();
   for (int i = 0; i < length; i++)
@@ -193,7 +193,7 @@ void drawText(string textVal, int positionX, int positionY) {
 void drawLargestText(string textVal, int positionX, int positionY) {
 
   int length = textVal.length();
-  int numPixels = length * 4;
+  // int numPixels = length * 4;
   glRasterPos2f( positionX, positionY );
   const char *text = textVal.c_str();
   for (int i = 0; i < length; i++)
