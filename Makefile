@@ -1,7 +1,4 @@
-# FMOD_DIR = /usr/local/dept/apps/fmod
-# FMOD_INCLUDE = -I$(FMOD_DIR)/api/inc -I$(FMOD_DIR)/examples/common
-# FMOD_LIB = $(FMOD_DIR)/api/lib/libfmodex64.so
-
+# compiling options
 OPTS = -Wall -g -Wno-deprecated
 LIBS = -lGL -lglut -lm
 ARCH := $(shell uname)
@@ -9,55 +6,47 @@ ifeq ($(ARCH), Linux)
 else
  MACOSX_DEFINE = -DMACOSX -I/sw/include
  LIBS = -I/usr/common/include -I/usr/include/GL -L/System/Library/Frameworks/OpenGL.framework/Libraries -framework GLUT -framework OpenGL -lGL -lm -lobjc -lstdc++
-
 endif
-Poker: poker.o screen.o welcomescreen.o datacontroller.o drawingfunctions.o button.o texture.o
-	g++ $(OPTS) $(MACOSX_DEFINE) -o Poker poker.o screen.o welcomescreen.o datacontroller.o drawingfunctions.o button.o texture.o $(LIBS)
 
-poker.o: poker.cpp
-	g++ $(OPTS) -c poker.cpp 
+BINARIES = Poker
 
-screen.o:   screen.cpp screen.h
-	g++ $(OPTS) -c screen.cpp
+all: $(BINARIES)
 
-# mainscreen.o:   mainscreen.cpp mainscreen.h
-# 	g++ -g -c mainscreen.cpp
+Poker: objects/poker.o objects/screen.o objects/mainscreen.o objects/welcomescreen.o objects/card.o objects/hand.o objects/datacontroller.o objects/drawingfunctions.o objects/button.o objects/texture.o
+	g++ $(OPTS) -o Poker objects/poker.o objects/screen.o objects/mainscreen.o objects/welcomescreen.o objects/card.o objects/hand.o objects/datacontroller.o objects/drawingfunctions.o objects/button.o objects/texture.o $(LIBS)
 
-welcomescreen.o:   welcomescreen.h welcomescreen.cpp
-	g++ $(OPTS) -c welcomescreen.cpp
+objects/poker.o: Poker.cpp
+	g++ $(OPTS) $(MACOSX_DEFINE) -c poker.cpp -o objects/poker.o
 
-# levelscreen.o:   levelscreen.h levelscreen.cpp
-# 	g++ -g -c levelscreen.cpp
+objects/screen.o:   headers/screen.h definitions/screen.cpp
+	g++ $(OPTS) -c definitions/screen.cpp -o objects/screen.o
 
-# generalscreen.o:   generalscreen.h generalscreen.cpp
-# 	g++ -g -c generalscreen.cpp
+objects/mainscreen.o:   headers/mainscreen.h definitions/mainscreen.cpp
+	g++ $(OPTS) -c definitions/mainscreen.cpp -o objects/mainscreen.o
 
-# professor.o:   professor.h professor.cpp
-# 	g++ -g -c professor.cpp
+objects/welcomescreen.o:   headers/welcomescreen.h definitions/welcomescreen.cpp
+	g++ $(OPTS) -c definitions/welcomescreen.cpp -o objects/welcomescreen.o
 
-# academicbuilding.o:   academicbuilding.h academicbuilding.cpp
-# 	g++ -g -c academicbuilding.cpp
+objects/card.o:	headers/card.h definitions/card.cpp
+	g++ $(OPTS) -c definitions/card.cpp -o objects/card.o
 
-# foodbuilding.o:   foodbuilding.h foodbuilding.cpp
-# 	g++ -g -c foodbuilding.cpp
+objects/hand.o:	headers/hand.h definitions/hand.cpp
+	g++ $(OPTS) -c definitions/hand.cpp -o objects/hand.o
 
-# entertainmentbuilding.o:   entertainmentbuilding.h entertainmentbuilding.cpp
-# 	g++ -g -c entertainmentbuilding.cpp
+objects/datacontroller.o:   headers/datacontroller.h definitions/datacontroller.cpp
+	g++ $(OPTS) -c definitions/datacontroller.cpp -o objects/datacontroller.o
 
-datacontroller.o:   datacontroller.h datacontroller.cpp
-	g++ $(OPTS) -c datacontroller.cpp
-
-drawingfunctions.o: drawingfunctions.cpp
-	g++ $(OPTS) -c drawingfunctions.cpp
+objects/drawingfunctions.o:	headers/drawingfunctions.h definitions/drawingfunctions.cpp
+	g++ $(OPTS) -c definitions/drawingfunctions.cpp -o objects/drawingfunctions.o
 
 # building.o:   building.h building.cpp
 # 	g++ -g -c building.cpp
 
-button.o: button.cpp button.h
-	g++ $(OPTS) -c button.cpp
+objects/button.o: headers/button.h definitions/button.cpp
+	g++ $(OPTS) -c definitions/button.cpp -o objects/button.o
 
-texture.o: texture.cpp texture.h
-	g++ $(OPTS) -c texture.cpp
+objects/texture.o: headers/texture.h definitions/texture.cpp
+	g++ $(OPTS) -c definitions/texture.cpp -o objects/texture.o
 
 # # sound.o: sound.cpp sound.h
 # # 	g++ $(OPTS) -c sound.cpp
@@ -66,4 +55,4 @@ texture.o: texture.cpp texture.h
 # 	g++ -g -c people.cpp
 
 clean:
-	rm -f *.o Poker
+	rm -f $(BINARIES) objects/*.o

@@ -6,14 +6,11 @@
 #include <GL/glut.h>
 #endif
 #include <iostream>
-#include "welcomescreen.h"
-// #include "levelscreen.h"
-// #include "generalscreen.h"
-// #include "mainscreen.h"
-#include "button.h"
+#include "headers/welcomescreen.h"
+#include "headers/mainscreen.h"
+#include "headers/button.h"
 #include <sys/time.h>
 #include <cstdlib>
-//#include <iomanip>
 
 using namespace std;
 
@@ -21,11 +18,13 @@ bool mouseIsDragging = false;
 
 bool fullscreen = false;
 
+bool onLoad = true;
+
 int WIDTH = 1200;  // width of the user window (640 + 80)
 int HEIGHT = 750;  // height of the user window (480 + 60)
 char programName[] = "Poker";
 
-#define pi 3.14159265
+double pi = 3.14159265;
 
 // double lastTime;
 // // double lastTimeSound;
@@ -36,18 +35,16 @@ char programName[] = "Poker";
 
 //FMOD::Sound *soundtrack;
 
-// enum ScreenType {WELCOME_SCREEN, LEVEL_SCREEN, GENERAL_SCREEN, MAIN_SCREEN};
-// ScreenType currentScreen =  WELCOME_SCREEN;//holds the current screen that we are on - intializes to the welcome screen
+enum ScreenType {WELCOME_SCREEN, MAIN_SCREEN};
+ScreenType currentScreen =  WELCOME_SCREEN; //holds the current screen that we are on - intializes to the welcome screen
 
 //initializes the data controller that does the main handling of the program... all the innards
 DataController dataController;
 
-//instantiates all the screens, saying whether or not to include the logo at the top
-// MainScreen mainscreen(&dataController, false);
+//instantiates all the screens
+MainScreen mainscreen(&dataController);
 WelcomeScreen welcomescreen(&dataController);
-// LevelScreen levelscreen(&dataController, true);
-// GeneralScreen generalscreen(&dataController, true);
-// Screen *screens[4] = {&welcomescreen, &levelscreen, &generalscreen, &mainscreen};
+Screen *screens[2] = {&welcomescreen, &mainscreen};
 
 int currentMousePosition[] = {0, 0};
 
@@ -64,7 +61,7 @@ void drawWindow()
 
   // draw stuff
   //draw the current screen that we are on
-  welcomescreen.draw();
+  screens[currentScreen]->draw();
 
   // tell the graphics card that we're done-- go ahead and draw!
   //   (technically, we are switching between two color buffers...)
@@ -102,6 +99,16 @@ void keyboard( unsigned char c, int x, int y )
   glutPostRedisplay();
 }
 
+void mouseCoords(int &x, int&y, int w2, int h2)
+{
+  int w = glutGet(GLUT_WINDOW_WIDTH);
+  int h = glutGet(GLUT_WINDOW_HEIGHT);
+  float ratiox = (float)w/(float)w2;
+  float ratioy = (float)h/(float)h2;
+  x/=ratiox;
+  y/=ratioy;
+}
+
 // the reshape function handles the case where the user changes the size
 //   of the window.  We need to fix the coordinate
 //   system, so that the drawing area is still the unit square.
@@ -112,20 +119,25 @@ void reshape(GLsizei w, GLsizei h)
   // // WIDTH = w;  HEIGHT = h;
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  glOrtho(0., w, h, 0., -1.0, 1.0);
+  glOrtho(0., WIDTH, HEIGHT, 0., -1.0, 1.0);
 
 }
 
 // the mouse function is called when a mouse button is pressed down or released
 void mouse(int button, int state, int x, int y)
 {
-  cout << "x: " << x << ", y: " << y << endl;
+  mouseCoords(x, y, WIDTH, HEIGHT);
+  // cout << "x: " << x << ", y: " << y << endl;
   if ( GLUT_LEFT_BUTTON == button ) {
     if ( GLUT_DOWN == state ) { // the user just pressed down on the mouse-- do something
       mouseIsDragging = true;
-      welcomescreen.didClickButton(x, y);
-    //   if (currentScreen != MAIN_SCREEN) {//if not on the main screen, should use these buttons to advance through the screens, else they are on the main screen buttons
-    //     if (currentScreen == WELCOME_SCREEN && newScreen == MAIN_SCREEN)
+      int newScreen = screens[currentScreen]->didClickButton(x, y);
+      if (currentScreen != MAIN_SCREEN) {//if not on the main screen, should use these buttons to advance through the screens, else they are on the main screen buttons
+        if (currentScreen == WELCOME_SCREEN && newScreen == MAIN_SCREEN) {
+          currentScreen = MAIN_SCREEN;
+        }
+      }
+    }
     //       mainscreen.generateDetailButtonsForLoadGame();
 
     //       switch (newScreen) {
@@ -140,17 +152,16 @@ void mouse(int button, int state, int x, int y)
 	   //          break;
 	   //      }
     //   } 
-    //   else {
-    //   // the user just let go the mouse-- do something
-    //   screens[currentScreen]->offButtons();
-    //   mouseIsDragging = false;
-    // }
+    else {
+      // the user just let go the mouse-- do something
+      screens[currentScreen]->offButtons();
+      mouseIsDragging = false;
     } 
-    else if ( GLUT_RIGHT_BUTTON == button ) {
-      //blah
-    }
-  glutPostRedisplay();
   }
+  else if ( GLUT_RIGHT_BUTTON == button ) {
+    //blah
+  }
+  glutPostRedisplay();
 }
 
 // the mouse_motion function is called when the mouse is being dragged,
@@ -158,10 +169,12 @@ void mouse(int button, int state, int x, int y)
 void mouse_motion(int x,int y)  {
   // the mouse is moving....
 
-  currentMousePosition[0] = x;
-  currentMousePosition[1] = x;
+  mouseCoords(x, y, WIDTH, HEIGHT);
 
-  welcomescreen.isOnButton(x, y);
+  currentMousePosition[0] = x;
+  currentMousePosition[1] = y;
+
+  screens[currentScreen]->isOnButton(x, y);
   
   glutPostRedisplay();
 }
@@ -191,6 +204,8 @@ void init(void)
 
   // welcome message
   cout << "Welcome to " << programName << "." << endl;
+
+  // dataController.loadTextures();
 }
 
 // function to return the current time, in seconds, since Jan 1, 1970.
