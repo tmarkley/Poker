@@ -217,6 +217,7 @@ double getCurrentTime()
   gettimeofday(&tv, &tz);
   // cout << "tv is " << tv.tv_sec << " micro " << tv.tv_usec << endl;
   return tv.tv_sec + tv.tv_usec/(double)1000000.;
+  // return tv.tv_sec + tv.tv_usec;
 }
 
 void idle() {

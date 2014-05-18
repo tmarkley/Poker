@@ -13,7 +13,7 @@ BINARIES = Poker
 all: $(BINARIES)
 
 Poker: objects/poker.o objects/screen.o objects/mainscreen.o objects/welcomescreen.o objects/card.o objects/hand.o objects/datacontroller.o objects/drawingfunctions.o objects/button.o objects/texture.o
-	g++ $(OPTS) -o Poker objects/poker.o objects/screen.o objects/mainscreen.o objects/welcomescreen.o objects/card.o objects/hand.o objects/datacontroller.o objects/drawingfunctions.o objects/button.o objects/texture.o $(LIBS)
+	g++ $(OPTS) -o poker objects/poker.o objects/screen.o objects/mainscreen.o objects/welcomescreen.o objects/card.o objects/hand.o objects/datacontroller.o objects/drawingfunctions.o objects/button.o objects/texture.o $(LIBS)
 
 objects/poker.o: Poker.cpp
 	g++ $(OPTS) $(MACOSX_DEFINE) -c poker.cpp -o objects/poker.o

@@ -2,6 +2,9 @@
 
 extern int WIDTH;
 extern int HEIGHT;
+extern double start_time;
+extern double getCurrentTime();
+
 
 WelcomeScreen::WelcomeScreen(DataController *theDataController) : Screen(theDataController) {
 
@@ -40,6 +43,7 @@ int WelcomeScreen::didClickButton(int x, int y) {
   if (currentScreen == DEFAULT_SCREEN) {
 
     if (buttonClicked == 0) {
+      start_time = getCurrentTime();
       return 1;//return one cause want to advance to next screen in main class
     }
     else if (buttonClicked == 1) {
@@ -71,6 +75,12 @@ int WelcomeScreen::didClickButton(int x, int y) {
 }
 
 void WelcomeScreen::drawDefaultScreen() {
+
+  // gluPerspective(60.0, 4.0/3.0, 0, 40);
+  // glMatrixMode(GL_MODELVIEW);
+  // glLoadIdentity();
+  // gluLookAt(0, 0, -10, 0, 0, 0, 0, 1, 0);
+
 
   if (buttons.size() == 0) {
   Button startGame ("", 310, 112, 75, 375, 1.0, 1.0, 1.0, 0.0, 0.2, 0.3),

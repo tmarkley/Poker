@@ -1,8 +1,10 @@
+#include <cmath>
 #include "../headers/mainscreen.h"
 
 extern int WIDTH;
 extern int HEIGHT;
 extern double pi;
+extern double getCurrentTime();
 
 MainScreen::MainScreen(DataController *theDataController) : Screen(theDataController) {
 
@@ -59,6 +61,133 @@ void MainScreen::draw(bool shouldDrawButtons) {
 
 }
 
+// Globals for animation
+bool changePlayers = false;
+bool doneDealing = false;
+bool doneSpreading = false;
+double start_time;
+double animation_duration = 1;
+double dealing_duration = 0.2;
+double spread_duration = 1.25;
+double current_time;
+double elapsed_time;
+int current_card = 0;
+string tempCards[5];
+float number;
+
+void animateCard(string card, double x_start, double y_start, double width_start, double height_start, double alpha_start, double rotation_start, double x_end, double y_end, double width_end, double height_end, double alpha_end, double rotation_end, double elapsed_time, double duration, double x_augment = 0, double y_augment = 0, double width_augment = 0, double height_augment = 0, double alpha_augment = 0, double rotation_augment = 0) {
+  double x = (x_end-x_start)*(elapsed_time/duration) + x_start + x_augment;
+  double y = (y_end-y_start)*(elapsed_time/duration) + y_start + y_augment;
+  double width = (width_end-width_start)*(elapsed_time/duration) + width_start + width_augment;
+  double height = (height_end-height_start)*(elapsed_time/duration) + height_start + height_augment;
+  double alpha = (alpha_end-alpha_start)*(elapsed_time/duration) + alpha_start + alpha_augment;
+  double rotation = (rotation_end-rotation_start)*(elapsed_time/duration) + rotation_start + rotation_augment;
+  drawTexture(loadTexture(card.c_str()), x, y, width, height, alpha, rotation);
+}
+
+void dealCardsAnimation(DataController * dataController, double elapsed_time, int current_card) {
+  if (current_card == 15) {
+    doneDealing = true;
+    start_time = getCurrentTime();
+    return;
+  }
+  switch (current_card % 3) {
+    case 0: {
+      animateCard("images/cards/large/cardback.pam", 525, -100, 150, 210, 1.0, 0, 1300, 300, 150, 210, 1.0, pi/2, elapsed_time, dealing_duration);
+      break;
+    }
+    case 1: {
+      animateCard("images/cards/large/cardback.pam", 525, -100, 150, 210, 1.0, 0, -200, 300, 150, 210, 1.0, -pi/2, elapsed_time, dealing_duration);
+      break;
+    }
+    case 2: {
+      animateCard("images/cards/large/cardback.pam", 525, -100, 150, 210, 1.0, 0, 525, 850, 150, 210, 1.0, pi, elapsed_time, dealing_duration);
+      break;
+    }
+  }
+}
+
+void changePlayersAnimation(DataController * dataController, double elapsed_time) {
+  animateCard("images/cards/large/cardback.pam", 58, 190, 150, 210, 1.0, -pi/2 + pi/8, 270, 430, 200, 280, 0.0, pi/8, elapsed_time, animation_duration);
+  animateCard(dataController->getCurrentPlayersCard(0), 58, 190, 150, 210, 0.0, -pi/2 + pi/8, 270, 430, 200, 280, 1.0, pi/8, elapsed_time, animation_duration);
+  animateCard("images/cards/large/cardback.pam", 67, 220, 150, 210, 1.0, -pi/2 + pi/16, 385, 405, 200, 280, 0.0, pi/16, elapsed_time, animation_duration);
+  animateCard(dataController->getCurrentPlayersCard(1), 67, 220, 150, 210, 0.0, -pi/2 + pi/16, 385, 405, 200, 280, 1.0, pi/16, elapsed_time, animation_duration);
+  animateCard("images/cards/large/cardback.pam", 70, 250, 150, 210, 1.0, -pi/2, 500, 400, 200, 280, 0.0, 0, elapsed_time, animation_duration);
+  animateCard(dataController->getCurrentPlayersCard(2), 70, 250, 150, 210, 0.0, -pi/2, 500, 400, 200, 280, 1.0, 0, elapsed_time, animation_duration);
+  animateCard("images/cards/large/cardback.pam", 55, 280, 150, 210, 1.0, -pi/2 - pi/16, 615, 415, 200, 280, 0.0, -pi/16, elapsed_time, animation_duration);
+  animateCard(dataController->getCurrentPlayersCard(3), 55, 280, 150, 210, 0.0, -pi/2 - pi/16, 615, 415, 200, 280, 1.0, -pi/16, elapsed_time, animation_duration);
+  animateCard("images/cards/large/cardback.pam", 40, 310, 150, 210, 1.0, -pi/2 - pi/8, 730, 450, 200, 280, 0.0, -pi/8, elapsed_time, animation_duration);
+  animateCard(dataController->getCurrentPlayersCard(4), 40, 310, 150, 210, 0.0, -pi/2 - pi/8, 730, 450, 200, 280, 1.0, -pi/8, elapsed_time, animation_duration);
+
+  animateCard(tempCards[0], 270, 430, 200, 280, 1.0, pi/8, 992, 310, 150, 210, 0.0, pi/2 + pi/8, elapsed_time, animation_duration);
+  animateCard("images/cards/large/cardback.pam", 270, 430, 200, 280, 0.0, pi/8, 992, 310, 150, 210, 1.0, pi/2 + pi/8, elapsed_time, animation_duration);
+  animateCard(tempCards[1], 385, 405, 200, 280, 1.0, pi/16, 983, 280, 150, 210, 0.0, pi/2 + pi/16, elapsed_time, animation_duration);
+  animateCard("images/cards/large/cardback.pam", 385, 405, 200, 280, 0.0, pi/16, 983, 280, 150, 210, 1.0, pi/2 + pi/16, elapsed_time, animation_duration);
+  animateCard(tempCards[2], 500, 400, 200, 280, 1.0, 0, 980, 250, 150, 210, 0.0, pi/2, elapsed_time, animation_duration);
+  animateCard("images/cards/large/cardback.pam", 500, 400, 200, 280, 0.0, 0, 980, 250, 150, 210, 1.0, pi/2, elapsed_time, animation_duration);
+  animateCard(tempCards[3], 615, 415, 200, 280, 1.0, -pi/16, 995, 220, 150, 210, 0.0, pi/2 - pi/16, elapsed_time, animation_duration);
+  animateCard("images/cards/large/cardback.pam", 615, 415, 200, 280, 0.0, -pi/16, 995, 220, 150, 210, 1.0, pi/2 - pi/16, elapsed_time, animation_duration);
+  animateCard(tempCards[4], 730, 450, 200, 280, 1.0, -pi/8, 1010, 190, 150, 210, 0.0, pi/2 - pi/8, elapsed_time, animation_duration);
+  animateCard("images/cards/large/cardback.pam", 730, 450, 200, 280, 0.0, -pi/8, 1010, 190, 150, 210, 1.0, pi/2 - pi/8, elapsed_time, animation_duration);
+
+  animateCard("images/cards/large/cardback.pam", 992, 310, 150, 210, 1.0, pi/2 + pi/8, 58, 190, 150, 210, 1.0, -pi/2 + pi/8, elapsed_time, animation_duration, 0, -200*sin((elapsed_time/animation_duration)*pi));
+  animateCard("images/cards/large/cardback.pam", 983, 280, 150, 210, 1.0, pi/2 + pi/16, 67, 220, 150, 210, 1.0, -pi/2 + pi/16, elapsed_time, animation_duration, 0, -200*sin((elapsed_time/animation_duration)*pi));
+  animateCard("images/cards/large/cardback.pam", 980, 250, 150, 210, 1.0, pi/2, 70, 250, 150, 210, 1.0, -pi/2, elapsed_time, animation_duration, 0, -200*sin((elapsed_time/animation_duration)*pi));
+  animateCard("images/cards/large/cardback.pam", 995, 220, 150, 210, 1.0, pi/2 - pi/16, 55, 280, 150, 210, 1.0, -pi/2 - pi/16, elapsed_time, animation_duration, 0, -200*sin((elapsed_time/animation_duration)*pi));
+  animateCard("images/cards/large/cardback.pam", 1010, 190, 150, 210, 1.0, pi/2 - pi/8, 40, 310, 150, 210, 1.0, -pi/2 - pi/8, elapsed_time, animation_duration, 0, -200*sin((elapsed_time/animation_duration)*pi));
+}
+
+void spreadCardsAnimation(DataController * dataController, double elapsed_time) {
+  animateCard("images/cards/large/cardback.pam", -200, 300, 150, 210, 1.0, -pi/2, 58, 190, 150, 210, 1.0, -pi/2 + pi/8, elapsed_time, spread_duration);
+  animateCard("images/cards/large/cardback.pam", -200, 300, 150, 210, 1.0, -pi/2, 67, 220, 150, 210, 1.0, -pi/2 + pi/16, elapsed_time, spread_duration);
+  animateCard("images/cards/large/cardback.pam", -200, 300, 150, 210, 1.0, -pi/2, 70, 250, 150, 210, 1.0, -pi/2, elapsed_time, spread_duration);
+  animateCard("images/cards/large/cardback.pam", -200, 300, 150, 210, 1.0, -pi/2, 55, 280, 150, 210, 1.0, -pi/2 - pi/16, elapsed_time, spread_duration);
+  animateCard("images/cards/large/cardback.pam", -200, 300, 150, 210, 1.0, -pi/2, 40, 310, 150, 210, 1.0, -pi/2 - pi/8, elapsed_time, spread_duration);
+
+  animateCard(dataController->getCurrentPlayersCard(0), 600, 850, 200, 280, 1.0, 0, 270, 430, 200, 280, 1.0, pi/8, elapsed_time, spread_duration);
+  animateCard(dataController->getCurrentPlayersCard(1), 600, 850, 200, 280, 1.0, 0, 385, 405, 200, 280, 1.0, pi/16, elapsed_time, spread_duration);
+  animateCard(dataController->getCurrentPlayersCard(2), 600, 850, 200, 280, 1.0, 0, 500, 400, 200, 280, 1.0, 0, elapsed_time, spread_duration);
+  animateCard(dataController->getCurrentPlayersCard(3), 600, 850, 200, 280, 1.0, 0, 615, 415, 200, 280, 1.0, -pi/16, elapsed_time, spread_duration);
+  animateCard(dataController->getCurrentPlayersCard(4), 600, 850, 200, 280, 1.0, 0, 730, 450, 200, 280, 1.0, -pi/8, elapsed_time, spread_duration);
+
+  animateCard("images/cards/large/cardback.pam", 1300, 300, 150, 210, 1.0, pi/2, 992, 310, 150, 210, 1.0, pi/2 + pi/8, elapsed_time, spread_duration);
+  animateCard("images/cards/large/cardback.pam", 1300, 300, 150, 210, 1.0, pi/2, 983, 280, 150, 210, 1.0, pi/2 + pi/16, elapsed_time, spread_duration);
+  animateCard("images/cards/large/cardback.pam", 1300, 300, 150, 210, 1.0, pi/2, 980, 250, 150, 210, 1.0, pi/2, elapsed_time, spread_duration);
+  animateCard("images/cards/large/cardback.pam", 1300, 300, 150, 210, 1.0, pi/2, 995, 220, 150, 210, 1.0, pi/2 - pi/16, elapsed_time, spread_duration);
+  animateCard("images/cards/large/cardback.pam", 1300, 300, 150, 210, 1.0, pi/2, 1010, 190, 150, 210, 1.0, pi/2 - pi/8, elapsed_time, spread_duration);
+}
+
+void drawCardsToScreen(DataController * dataController) {
+    drawTexture(loadTexture("images/cards/large/cardback.pam"), 58, 190, 150, 210, 1.0, -pi/2 + pi/8);
+    drawTexture(loadTexture("images/cards/large/cardback.pam"), 67, 220, 150, 210, 1.0, -pi/2 + pi/16);
+    drawTexture(loadTexture("images/cards/large/cardback.pam"), 70, 250, 150, 210, 1.0, -pi/2);
+    drawTexture(loadTexture("images/cards/large/cardback.pam"), 55, 280, 150, 210, 1.0, -pi/2 - pi/16);
+    drawTexture(loadTexture("images/cards/large/cardback.pam"), 40, 310, 150, 210, 1.0, -pi/2 - pi/8);
+
+    drawTexture(loadTexture(dataController->getCurrentPlayersCard(0).c_str()), 270, 430, 200, 280, 1.0, pi/8);
+    drawTexture(loadTexture(dataController->getCurrentPlayersCard(1).c_str()), 385, 405, 200, 280, 1.0, pi/16);
+    drawTexture(loadTexture(dataController->getCurrentPlayersCard(2).c_str()), 500, 400, 200, 280);
+    drawTexture(loadTexture(dataController->getCurrentPlayersCard(3).c_str()), 615, 415, 200, 280, 1.0, -pi/16);
+    drawTexture(loadTexture(dataController->getCurrentPlayersCard(4).c_str()), 730, 450, 200, 280, 1.0, -pi/8);
+
+    drawTexture(loadTexture("images/cards/large/cardback.pam"), 992, 310, 150, 210, 1.0, pi/2 + pi/8);
+    drawTexture(loadTexture("images/cards/large/cardback.pam"), 983, 280, 150, 210, 1.0, pi/2 + pi/16);
+    drawTexture(loadTexture("images/cards/large/cardback.pam"), 980, 250, 150, 210, 1.0, pi/2);
+    drawTexture(loadTexture("images/cards/large/cardback.pam"), 995, 220, 150, 210, 1.0, pi/2 - pi/16);
+    drawTexture(loadTexture("images/cards/large/cardback.pam"), 1010, 190, 150, 210, 1.0, pi/2 - pi/8);
+}
+
+void setTime() {
+  current_time = getCurrentTime();
+  elapsed_time = current_time - start_time;
+}
+
+void storeCards(DataController * dataController) {
+  for (int i = 0; i < 5; ++i) {
+    tempCards[i] = dataController->getCurrentPlayersCard(i);
+  }
+}
+
 void MainScreen::drawMainScreen() {
 
   if (buttons.size() == 0) {
@@ -67,36 +196,60 @@ void MainScreen::drawMainScreen() {
   }
 
   drawTexture(loadTexture("images/backgrounds/pam/mainscreen.pam"), 0, 0, 1200, 750);
+  
+  if (!doneDealing) {
+    setTime();
+    if ((elapsed_time < dealing_duration) && !doneDealing) {
+      dealCardsAnimation(dataController, elapsed_time, current_card);
+    }
+    else {
+      ++current_card; 
+      start_time = getCurrentTime();
+      setTime();
+      dealCardsAnimation(dataController, elapsed_time, current_card);
+    }
+  }
+  else if (!doneSpreading) {
+    setTime();
+    if (elapsed_time < spread_duration) {
+      spreadCardsAnimation(dataController, elapsed_time);
+    }
+    else {
+      doneSpreading = true;
+      spreadCardsAnimation(dataController, elapsed_time);
+      number = rand() % 100000;
+      number /= 1000.0;
+    }
+  }
+  else if (changePlayers) {
+    setTime();
+    if (elapsed_time < animation_duration) {
+      changePlayersAnimation(dataController, elapsed_time);
+    }
+    else {
+      changePlayers = false;
+      drawCardsToScreen(dataController);
+    }
+  }
+  else {
 
-  drawTexture(loadTexture("images/cards/large/cardback.pam"), 58, 190, 150, 210, 1.0, -pi/2 + pi/8);
-  drawTexture(loadTexture("images/cards/large/cardback.pam"), 67, 220, 150, 210, 1.0, -pi/2 + pi/16);
-  drawTexture(loadTexture("images/cards/large/cardback.pam"), 70, 250, 150, 210, 1.0, -pi/2);
-  drawTexture(loadTexture("images/cards/large/cardback.pam"), 55, 280, 150, 210, 1.0, -pi/2 - pi/16);
-  drawTexture(loadTexture("images/cards/large/cardback.pam"), 40, 310, 150, 210, 1.0, -pi/2 - pi/8);
+    drawCardsToScreen(dataController);
 
-  drawTexture(loadTexture(dataController->getCurrentPlayersCard(0).c_str()), 270, 430, 200, 280, 1.0, pi/8);
-  drawTexture(loadTexture(dataController->getCurrentPlayersCard(1).c_str()), 385, 405, 200, 280, 1.0, pi/16);
-  drawTexture(loadTexture(dataController->getCurrentPlayersCard(2).c_str()), 500, 400, 200, 280);
-  drawTexture(loadTexture(dataController->getCurrentPlayersCard(3).c_str()), 615, 415, 200, 280, 1.0, -pi/16);
-  drawTexture(loadTexture(dataController->getCurrentPlayersCard(4).c_str()), 730, 450, 200, 280, 1.0, -pi/8);
+    drawTexture(loadTexture(dataController->getCurrentChip().c_str()), 990, 610, 140, 140, 1.0, pi/dataController->getChipRotation());
 
-  drawTexture(loadTexture("images/cards/large/cardback.pam"), 992, 310, 150, 210, 1.0, pi/2 + pi/8);
-  drawTexture(loadTexture("images/cards/large/cardback.pam"), 983, 280, 150, 210, 1.0, pi/2 + pi/16);
-  drawTexture(loadTexture("images/cards/large/cardback.pam"), 980, 250, 150, 210, 1.0, pi/2);
-  drawTexture(loadTexture("images/cards/large/cardback.pam"), 995, 220, 150, 210, 1.0, pi/2 - pi/16);
-  drawTexture(loadTexture("images/cards/large/cardback.pam"), 1010, 190, 150, 210, 1.0, pi/2 - pi/8);
+    char buff[20];
+    long money = dataController->getCurrentPlayersCurrencyMoneysAndShit();
+    sprintf(buff, "%ld", money);
+    drawNumbers(buff, strlen(buff), 1020, 570, 0.6, false);
 
-  drawTexture(loadTexture(dataController->getCurrentChip().c_str()), 990, 610, 140, 140, 1.0, pi/dataController->getChipRotation());
-
-  char buff[20];
-  long money = dataController->getCurrentPlayersCurrencyMoneysAndShit();
-  sprintf(buff, "%ld", money);
-  drawNumbers(buff, strlen(buff), 1020, 570, 0.6, false);
-
-  char buff2[10];
-  float number = 6.91;
-  sprintf(buff2, "%.2f", number);
-  drawNumbers(buff2, strlen(buff2), 552, 300, 1, true);
+    char buff2[10];
+    // float number = rand() % 100000;
+    // number /= 1000.0;
+    sprintf(buff2, "%.2f", number);
+    drawNumbers(buff2, strlen(buff2), 552, 300, 1, true);
+  }
+      
+  glutPostRedisplay();
 
 }
 
@@ -170,7 +323,12 @@ int MainScreen::didClickButton(int x, int y) {
       currentScreen = RULES;
     }
     if (buttonClicked == 1) {
+      storeCards(dataController);
       dataController->nextPlayer();
+      start_time = getCurrentTime();
+      changePlayers = true;
+      number = rand() % 100000;
+      number /= 1000.0;
     }
   }
   else {
