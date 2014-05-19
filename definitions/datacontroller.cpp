@@ -15,6 +15,10 @@ DataController::DataController() {
 
   dealHands();
 
+  playerNames.push_back("Player 1");
+  playerNames.push_back("Player 2");
+  playerNames.push_back("Playser 3");
+
   srand(time(0));
   currentPlayer = rand() % 3;
   

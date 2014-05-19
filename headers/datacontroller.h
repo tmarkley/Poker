@@ -17,6 +17,7 @@ class DataController {
   vector<Card *> deck;
   vector<Hand> hands;
   int currentPlayer;
+  vector<string> playerNames;
   int turns;
   vector<string> chip;
   int chipRotation; // this is very necessary.

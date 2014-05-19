@@ -70,10 +70,11 @@ void Button::draw(int leftScreenX){
     if (isClick) {
       glColor4f(colorClicked[0], colorClicked[1], colorClicked[2], alphaClicked);
     }
-    else
+    else {
       glColor4f(colorChange[0], colorChange[1], colorChange[2], alphaChange);
+    }
   }
-  else
+  else 
     glColor4f(color[0], color[1], color[2], alpha);
 
   if (leftScreenX != oldOffset) {

@@ -2,8 +2,6 @@
 
 extern int WIDTH;
 extern int HEIGHT;
-extern double start_time;
-extern double getCurrentTime();
 
 
 WelcomeScreen::WelcomeScreen(DataController *theDataController) : Screen(theDataController) {
@@ -15,8 +13,6 @@ WelcomeScreen::WelcomeScreen(DataController *theDataController) : Screen(theData
 
 void WelcomeScreen::draw(bool shouldDrawButtons) {
  
-  Screen::draw(false);
-
   if (currentScreen == DEFAULT_SCREEN) {
     drawDefaultScreen();
 
@@ -30,9 +26,7 @@ void WelcomeScreen::draw(bool shouldDrawButtons) {
 
   }
 
-  
-  if (buttons.size() != 0)
-    Screen::drawButtons(0, buttons.size() - 1);
+  Screen::draw(true);
   
 }
 
@@ -43,7 +37,6 @@ int WelcomeScreen::didClickButton(int x, int y) {
   if (currentScreen == DEFAULT_SCREEN) {
 
     if (buttonClicked == 0) {
-      start_time = getCurrentTime();
       return 1;//return one cause want to advance to next screen in main class
     }
     else if (buttonClicked == 1) {

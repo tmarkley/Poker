@@ -12,8 +12,8 @@ BINARIES = Poker
 
 all: $(BINARIES)
 
-Poker: objects/poker.o objects/screen.o objects/mainscreen.o objects/welcomescreen.o objects/card.o objects/hand.o objects/datacontroller.o objects/drawingfunctions.o objects/button.o objects/texture.o
-	g++ $(OPTS) -o poker objects/poker.o objects/screen.o objects/mainscreen.o objects/welcomescreen.o objects/card.o objects/hand.o objects/datacontroller.o objects/drawingfunctions.o objects/button.o objects/texture.o $(LIBS)
+Poker: objects/poker.o objects/screen.o objects/mainscreen.o objects/namescreen.o objects/welcomescreen.o objects/card.o objects/hand.o objects/datacontroller.o objects/drawingfunctions.o objects/button.o objects/texture.o
+	g++ $(OPTS) -o poker objects/poker.o objects/screen.o objects/mainscreen.o objects/namescreen.o objects/welcomescreen.o objects/card.o objects/hand.o objects/datacontroller.o objects/drawingfunctions.o objects/button.o objects/texture.o $(LIBS)
 
 objects/poker.o: Poker.cpp
 	g++ $(OPTS) $(MACOSX_DEFINE) -c poker.cpp -o objects/poker.o
@@ -23,6 +23,9 @@ objects/screen.o:   headers/screen.h definitions/screen.cpp
 
 objects/mainscreen.o:   headers/mainscreen.h definitions/mainscreen.cpp
 	g++ $(OPTS) -c definitions/mainscreen.cpp -o objects/mainscreen.o
+
+objects/namescreen.o:	headers/namescreen.h definitions/namescreen.cpp
+	g++ $(OPTS) -c definitions/namescreen.cpp -o objects/namescreen.o
 
 objects/welcomescreen.o:   headers/welcomescreen.h definitions/welcomescreen.cpp
 	g++ $(OPTS) -c definitions/welcomescreen.cpp -o objects/welcomescreen.o

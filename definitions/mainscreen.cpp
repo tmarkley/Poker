@@ -47,8 +47,6 @@ MainScreen::MainScreen(DataController *theDataController) : Screen(theDataContro
 
 void MainScreen::draw(bool shouldDrawButtons) {
 
-  Screen::draw(false);
-
   if (currentScreen == MAIN) {
     drawMainScreen();
 
@@ -56,8 +54,7 @@ void MainScreen::draw(bool shouldDrawButtons) {
   else
     drawRulesScreen();
 
-  if (buttons.size() != 0)
-    Screen::drawButtons(0, buttons.size() - 1);
+  Screen::draw(true);
 
 }
 

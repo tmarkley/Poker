@@ -7,6 +7,7 @@
 #endif
 #include <iostream>
 #include "headers/welcomescreen.h"
+#include "headers/namescreen.h"
 #include "headers/mainscreen.h"
 #include "headers/button.h"
 #include <sys/time.h>
@@ -48,7 +49,7 @@ double pi = 3.14159265;
 
 //FMOD::Sound *soundtrack;
 
-enum ScreenType {WELCOME_SCREEN, MAIN_SCREEN};
+enum ScreenType {WELCOME_SCREEN, NAME_SCREEN, MAIN_SCREEN};
 ScreenType currentScreen =  WELCOME_SCREEN; //holds the current screen that we are on - intializes to the welcome screen
 
 //initializes the data controller that does the main handling of the program... all the innards
@@ -56,8 +57,9 @@ DataController dataController;
 
 //instantiates all the screens
 MainScreen mainscreen(&dataController);
+NameScreen namescreen(&dataController);
 WelcomeScreen welcomescreen(&dataController);
-Screen *screens[2] = {&welcomescreen, &mainscreen};
+Screen *screens[3] = {&welcomescreen, &namescreen, &mainscreen};
 
 int currentMousePosition[] = {0, 0};
 
@@ -66,11 +68,6 @@ void drawWindow()
 {
   // clear the buffer
   glClear(GL_COLOR_BUFFER_BIT);
-
-  // glColor3f(.35, .59, .999);
-  // drawTexture(loadTexture("backgrounds/welcomescreen.pam"), 0, 0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
-  // drawBox(0, 0, 850, 650);
-  // drawTexture(loadTexture("cards/A_hearts.pam"), 0, 0, 200, 286, 1, pi/4);
 
   // draw stuff
   //draw the current screen that we are on
@@ -85,9 +82,15 @@ void drawWindow()
 void keyboard( unsigned char c, int x, int y )
 {
   int win = glutGetWindow();
-  // screens[currentScreen]->setTextBoxText(c);
+  if (currentScreen == NAME_SCREEN) {
+    namescreen.setTextBoxText(c);
+  }
     
   switch(c) {
+    case 9: // tab
+      if (currentScreen == NAME_SCREEN)
+        namescreen.nextTextBox();
+      break;
     case 'F':
     case 'f':
       if (!fullscreen)  {
@@ -146,25 +149,14 @@ void mouse(int button, int state, int x, int y)
       mouseIsDragging = true;
       int newScreen = screens[currentScreen]->didClickButton(x, y);
       if (currentScreen != MAIN_SCREEN) {//if not on the main screen, should use these buttons to advance through the screens, else they are on the main screen buttons
-        if (currentScreen == WELCOME_SCREEN && newScreen == MAIN_SCREEN) {
+        if (currentScreen == WELCOME_SCREEN && newScreen == NAME_SCREEN) {
+          currentScreen = NAME_SCREEN;
+        }
+        else if (currentScreen == NAME_SCREEN && newScreen == MAIN_SCREEN) {
           currentScreen = MAIN_SCREEN;
         }
       }
     }
-    //       mainscreen.generateDetailButtonsForLoadGame();
-
-    //       switch (newScreen) {
-    //         case(LEVEL_SCREEN):
-	   //          currentScreen = LEVEL_SCREEN;
-	   //          break;
-	   //        case(GENERAL_SCREEN):
-	   //          currentScreen = GENERAL_SCREEN;
-	   //          break;
-	   //        case(MAIN_SCREEN):
-	   //          currentScreen = MAIN_SCREEN;
-	   //          break;
-	   //      }
-    //   } 
     else {
       // the user just let go the mouse-- do something
       screens[currentScreen]->offButtons();
@@ -186,6 +178,10 @@ void mouse_motion(int x,int y)  {
 
   currentMousePosition[0] = x;
   currentMousePosition[1] = y;
+
+  if (currentScreen == NAME_SCREEN) {
+    namescreen.isOnTextBoxes(x, y);
+  }
 
   screens[currentScreen]->isOnButton(x, y);
   

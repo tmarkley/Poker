@@ -19,7 +19,7 @@
 class Screen {
   
  // bool alertButtonIsAdded;//used to make sure the button for the alert button is only added once
- // bool textBoxButtonIsAdded;
+ // bool textBoxCheck;
  // bool isOverTextBox;
 
  protected:
