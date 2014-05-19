@@ -11,7 +11,7 @@ class Hand {
 
 	vector<Card *> hand;
 
-	int highRank; // keeps track of highest card in best hand
+	int handRank[6]; // keeps track of ranking order for each hand
 	string bestHand;
 
 public:
@@ -21,7 +21,7 @@ public:
 	void clearHand();
 
 	void rigHand();
-	int getHighRank();
+	int getHandRank(int index = 5);
 	string getBestHand();
 
 	void printHand();
@@ -34,7 +34,6 @@ public:
 	int ThreeOfAKind();
 	int TwoPair();
 	int OnePair();
-	int HighCard();
 
 };
 

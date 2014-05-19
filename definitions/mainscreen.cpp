@@ -74,6 +74,7 @@ double dealing_duration = 0.3;
 double spread_duration = 1.25;
 double current_time;
 double elapsed_time;
+double table_orientation = 0;
 int current_card = 0;
 string tempCards[5];
 float number;
@@ -112,6 +113,7 @@ void dealCardsAnimation(DataController * dataController, double elapsed_time, in
 
 void changePlayersAnimation(DataController * dataController, double elapsed_time) {
   // animateTexture("images/backgrounds/pam/mainscreen.pam", 0, 0, 1200, 750, 1.0, 0, 0, 0, 1200, 750, 1.0, pi/2, elapsed_time, animation_duration);
+  animateTexture("images/backgrounds/pam/maintable.pam", -600, -375, 2400, 1500, 1.0, table_orientation-pi/2, -600, -375, 2400, 1500, 1.0, table_orientation+pi/8, elapsed_time, spread_duration); // honestly, I have no idea why adding pi/8 makes it work better, but it does.
   
   animateTexture("images/cards/large/cardback.pam", 58, 190, 150, 210, 1.0, -pi/2 + pi/8, 270, 430, 200, 280, 0.0, pi/8, elapsed_time, animation_duration);
   animateTexture(dataController->getCurrentPlayersCard(0), 58, 190, 150, 210, 0.0, -pi/2 + pi/8, 270, 430, 200, 280, 1.0, pi/8, elapsed_time, animation_duration);
@@ -140,6 +142,7 @@ void changePlayersAnimation(DataController * dataController, double elapsed_time
   animateTexture("images/cards/large/cardback.pam", 980, 250, 150, 210, 1.0, pi/2, 70, 250, 150, 210, 1.0, -pi/2, elapsed_time, animation_duration, 0, -250*sin((elapsed_time/animation_duration)*pi));
   animateTexture("images/cards/large/cardback.pam", 995, 220, 150, 210, 1.0, pi/2 - pi/16, 55, 280, 150, 210, 1.0, -pi/2 - pi/16, elapsed_time, animation_duration, 0, -250*sin((elapsed_time/animation_duration)*pi));
   animateTexture("images/cards/large/cardback.pam", 1010, 190, 150, 210, 1.0, pi/2 - pi/8, 40, 310, 150, 210, 1.0, -pi/2 - pi/8, elapsed_time, animation_duration, 0, -250*sin((elapsed_time/animation_duration)*pi));
+  // drawTexture(loadTexture("images/backgrounds/pam/mainoverlay.pam"), 0, 0, 1200, 750);
 
 }
 
@@ -201,16 +204,16 @@ void MainScreen::drawMainScreen() {
     buttons.push_back(Button("", 230, 85, 952, 19, 0.098, 0.694, 0.173, 0.0, 0.2, 0.3));
   }
 
-  drawTexture(loadTexture("images/backgrounds/pam/mainscreen.pam"), 0, 0, 1200, 750);
+  drawTexture(loadTexture("images/backgrounds/pam/maintable.pam"), -600, -375, 2400, 1500, 1, table_orientation);
   
   if (!startDealing) {
     setTime();
     if (elapsed_time < dealing_delay) {
-      drawTexture(loadTexture("images/backgrounds/pam/mainscreen.pam"), 0, 0, 1200, 750);
+      // drawTexture(loadTexture("images/backgrounds/pam/mainscreen.pam"), 0, 0, 1200, 750);
     }
     else {
       startDealing = true;
-      drawTexture(loadTexture("images/backgrounds/pam/mainscreen.pam"), 0, 0, 1200, 750);
+      // drawTexture(loadTexture("images/backgrounds/pam/mainscreen.pam"), 0, 0, 1200, 750);
       start_time = getCurrentTime();
     }
   }
@@ -225,6 +228,7 @@ void MainScreen::drawMainScreen() {
       setTime();
       dealCardsAnimation(dataController, elapsed_time, current_card);
     }
+    glutPostRedisplay();
   }
   else if (!doneSpreading) {
     setTime();
@@ -237,9 +241,10 @@ void MainScreen::drawMainScreen() {
       number = rand() % 100000;
       number /= 1000.0;
       // dataController->getCurrentPlayersHand().printHand();
-      dataController->getCurrentPlayersHand().findBestHand();
-      cout << dataController->getCurrentPlayersHand().getBestHand() << ", with rank " << dataController->getCurrentPlayersHand().getHighRank() << endl;
+      // dataController->getCurrentPlayersHand().findBestHand();
+      // cout << dataController->getCurrentPlayersHand().getBestHand() << ", with rank " << dataController->getCurrentPlayersHand().getHandRank(4) << endl;
     }
+    glutPostRedisplay();
   }
   else if (changePlayers) {
     setTime();
@@ -250,6 +255,7 @@ void MainScreen::drawMainScreen() {
       changePlayers = false;
       drawCardsToScreen(dataController);
     }
+    glutPostRedisplay();
   }
   else {
 
@@ -270,8 +276,9 @@ void MainScreen::drawMainScreen() {
     sprintf(buff2, "%.2f", number);
     drawNumbers(buff2, strlen(buff2), 552, 300, 1, true);
   }
+  drawTexture(loadTexture("images/backgrounds/pam/mainoverlay.pam"), 0, 0, 1200, 750);
       
-  glutPostRedisplay();
+  // glutPostRedisplay();
 
 }
 
@@ -348,12 +355,13 @@ int MainScreen::didClickButton(int x, int y) {
       storeCards(dataController);
       dataController->nextPlayer();
       start_time = getCurrentTime();
+      table_orientation += pi/2;
       changePlayers = true;
       number = rand() % 100000;
       number /= 1000.0;
       // dataController->getCurrentPlayersHand().printHand();
-      dataController->getCurrentPlayersHand().findBestHand();
-      cout << dataController->getCurrentPlayersHand().getBestHand() << ", with rank " << dataController->getCurrentPlayersHand().getHighRank() << endl;
+      // dataController->getCurrentPlayersHand().findBestHand();
+      // cout << dataController->getCurrentPlayersHand().getBestHand() << ", with rank " << dataController->getCurrentPlayersHand().getHandRank(4) << endl;
 
     }
   }

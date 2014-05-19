@@ -35,6 +35,7 @@ public:
   void clearDeck();
   
   // getter functions
+  int getWinningHand();
   string getCurrentPlayersCard(int index);
   Hand & getCurrentPlayersHand();
   int getCurrentPlayer();

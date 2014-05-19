@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "../headers/datacontroller.h"
 
 #define DEV_TEST false
@@ -16,7 +17,8 @@ DataController::DataController() {
   dealHands();
 
   srand(time(0));
-  currentPlayer = rand() % 3;
+  // currentPlayer = rand() % 3;
+  currentPlayer = 0;
   
   chip.push_back("redchip.pam");
   chip.push_back("blackchip.pam");
@@ -74,14 +76,111 @@ void DataController::dealHands() {
     }
   }
   if (DEV_TEST) {
-    hands[currentPlayer].rigHand();
+    // hands[currentPlayer].rigHand();
+    for (int i = 0; i < 3; ++i) {
+      hands[i].findBestHand();
+      cout << "Player " << i << "'s Hand" << endl;
+      cout << "~~~~~~~~~~~~~~" << endl;
+      hands[i].printHand();
+      cout << "~~~~~~~~~~~~~~" << endl;
+      cout << hands[i].getBestHand() << endl;
+      cout << "~~~~~~~~~~~~~~" << endl;
+      for (int j = 0; j < 6; ++j) {
+        cout << hands[i].getHandRank(j) << " ";
+      }
+      cout << endl << endl;
+    }
+    cout << endl << "Best Hand: Player " << getWinningHand() << endl;
   }
+  if (!DEV_TEST)
+    cout << endl << "Best Hand: Player " << getWinningHand() << endl;
 }
 
 string DataController::getCurrentPlayersCard(int index) {
 
   return "images/cards/medium/" + hands[currentPlayer].getCard(index);
 
+}
+
+int downToOne(bool player[]) {
+  int num_players_remaining = 0;
+  int last_player;
+  for (int i = 0; i < 3; ++i) {
+    if (player[i]) {
+      last_player = i;
+      num_players_remaining++;
+    }
+  }
+  if (num_players_remaining > 1)
+    return -1;
+  else if (num_players_remaining == 1) {
+    return last_player;
+  }
+  else
+    cout << "What the heck is going on?" << endl;
+  return -1;
+}
+
+int DataController::getWinningHand() {
+
+  bool player[3] = {true, true, true};
+
+  for (int i = 5; i >= 0; --i) {
+    // for (int j = 0; j < 3; ++j) 
+      // cout << "player[" << j << "]: " << player[j] << endl;
+    int maximum;
+    if (player[0] && player[1] && player[2])
+      maximum = max(hands[0].getHandRank(i), max(hands[1].getHandRank(i), hands[2].getHandRank()));
+    else {
+      if (player[0] && player[1])
+        maximum = max(hands[0].getHandRank(i), hands[1].getHandRank(i));
+      else if (player[1] && player[2])
+        maximum = max(hands[1].getHandRank(i), hands[2].getHandRank(i));
+      else // player[0] && player[2]
+        maximum = max(hands[0].getHandRank(i), hands[2].getHandRank(i));
+    }
+    // cout << "maximum: " << maximum << endl;
+    for (int j = 0; j < 3; ++j) {
+      if (hands[j].getHandRank(i) < maximum)
+        player[j] = false;
+    }
+    if (downToOne(player) != -1) {
+      return downToOne(player);
+    }
+  }
+  // CHANGE THIS EVENTUALLY ///////////////
+  cerr << "Tie: MIGHT CAUSE SEG FAULT CURRENTLY" << endl;
+  return -1;
+  // CHANGE THIS EVENTUALLY ///////////////
+
+  // int currentBest = 0;
+  // for (int i = 5; i >= 0; --i) {
+  //   for (int j = 0; j < 3; ++j) 
+  //     cout << "player[" << j << "]: " << player[j] << endl;
+  //   int best;
+  //   if (player[0]) {
+  //     best = hands[0].getHandRank(i);
+  //   }
+  //   else if (player[1]) {
+  //     currentBest = 1;
+  //     best = hands[1].getHandRank(i);
+  //   }
+  //   else
+  //     return 2; // player3 won
+  //   cout << "best: " << best << endl;
+  //   for (int j = 0; j < 3; ++j) {
+  //     if (hands[j].getHandRank(i) < best) {
+  //       player[j] = false;
+  //     }
+  //     else if (hands[j].getHandRank(i) > best) {
+  //       player[currentBest] = false;
+  //     }
+  //   }
+  //   if (downToOne(player)) {
+  //     return downToOne(player);
+  //   }
+  // }
+  // return downToOne(player);
 }
 
 Hand & DataController::getCurrentPlayersHand() {

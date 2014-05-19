@@ -57,60 +57,59 @@ void Hand::clearHand() {
 
 int Hand::findBestHand() {
 
-  int rank = 0;
-  if ((rank = StraightFlush()) != -1) {
-    highRank = rank;
+  // int rank = 0;
+  if (StraightFlush()) {
+    handRank[5] = 8;
     bestHand = "Straight Flush";
     return 8;
   }
-  else if ((rank = FourOfAKind()) != -1) {
-    highRank = rank;
+  else if (FourOfAKind()) {
+    handRank[5] = 7;
     bestHand = "Four Of A Kind";
     return 7;
   }
-  else if ((rank = FullHouse()) != -1) {
-    highRank = rank;
+  else if (FullHouse()) {
+    handRank[5] = 6;
     bestHand = "Full House";
     return 6;
   }
-  else if ((rank = Flush()) != -1) {
-    highRank = rank;
+  else if (Flush()) {
+    handRank[5] = 5;
     bestHand = "Flush";
     return 5;
   }
-  else if ((rank = Straight()) != -1) {
-    highRank = rank;
+  else if (Straight()) {
+    handRank[5] = 4;
     bestHand = "Straight";
     return 4;
   }
-  else if ((rank = ThreeOfAKind()) != -1) {
-    highRank = rank;
+  else if (ThreeOfAKind()) {
+    handRank[5] = 3;
     bestHand = "Three Of A Kind";
     return 3;
   }
-  else if ((rank = TwoPair()) != -1) {
-    highRank = rank;
+  else if (TwoPair()) {
+    handRank[5] = 2;
     bestHand = "Two Pair";
     return 2;
   }
-  else if ((rank = OnePair()) != -1) {
-    highRank = rank;
+  else if (OnePair()) {
+    handRank[5] = 1;
     bestHand = "One Pair";
     return 1;
   }
   else {
-    highRank = HighCard();
+    handRank[5] = 0;
     bestHand = "High Card";
     return 0;
   }
 
 }
 
-string suits[] = {"Clubs", "Diamonds", "Hearts", "Spades"};
-string faceCards[] = {"Jack", "Queen", "King", "Ace"};
 
 void Hand::printHand() {
-  cout << endl;
+  string suits[] = {"Clubs", "Diamonds", "Hearts", "Spades"};
+  string faceCards[] = {"Jack", "Queen", "King", "Ace"};
   for (int i = 0; i < hand.size(); ++i) {
     int rank = hand[i]->getRank();
     if (rank <= 10) {
@@ -123,9 +122,9 @@ void Hand::printHand() {
   }
 }
 
-int Hand::getHighRank() {
+int Hand::getHandRank(int index) {
 
-  return highRank;
+  return handRank[index];
 
 }
 
@@ -136,80 +135,87 @@ string Hand::getBestHand() {
 }
 
 int Hand::StraightFlush() {
-  int highestCard = hand[4]->getRank();
-  int secondHighest = hand[3]->getRank();
+  for (int i = 0; i < 5; ++i)
+    handRank[i] = hand[i]->getRank();
+
   int suit = hand[4]->getSuit();
-  int decrementer = highestCard;
+  int decrementer = handRank[4];
+
   for (int i = 0; i < 4; ++i) {
     if (hand[i]->getSuit() != suit) {
-      // cout << "Wrong suit" << endl;
-      return -1;
+      return 0;
     }
   }
-  if (highestCard == 14) { // Ace
-    if (secondHighest == 5) { // Ace is low
+  
+  if (handRank[4] == 14) { // Ace
+    if (handRank[3] == 5) { // Assume Ace low
+      decrementer = handRank[3];
       for (int i = 2; i >= 0; --i) { // check lower 3 cards
-        if (hand[i]->getRank() != --secondHighest) {
-          return -1;
+        if (handRank[i] != --decrementer) {
+          return 0;
         }
       }
-      return 5; // Straight flush with Ace low
+      return 1; // Straight flush with Ace low
     }
     else { // Ace is high
       for (int i = 3; i >= 0; --i) { // check lower 4 cards
-        if (hand[i]->getRank() != --decrementer) {
-          return -1;
+        if (handRank[i] != --decrementer) {
+          return 0;
         }
       }
-      return highestCard;
+      return 1;
     }
   }
-  else { // regular run of cards with Ace high
+  else { // regular run of cards without Ace
     for (int i = 3; i >= 0; --i) { // check lower 4 cards
-      if (hand[i]->getRank() != --decrementer) {
-        return -1;
+      if (handRank[i] != --decrementer) {
+        return 0;
       }
     }
-    return highestCard;
+    return 1;
   }
-  return -1;
+  return 0;
 }
 
 int Hand::FourOfAKind() {
-  int rank[5];
-  for (int i = 0; i < 5; ++i)
-    rank[i] = hand[i]->getRank();
-  if (rank[0] == rank[1] && rank[1] == rank[2] && rank[2] == rank[3]) {
-    return rank[0];
+  if (handRank[0] == handRank[1] && handRank[1] == handRank[2] && handRank[2] == handRank[3]) { // first 4 are same
+    // EXAMPLE: 2 2 2 2 3
+    handRank[0] = handRank[4]; // 3 2 2 2 3
+    handRank[4] = handRank[3]; // 3 2 2 2 2
+    return 1;
   }
-  else if (rank[1] == rank[2] && rank[2] == rank[3] && rank[3] == rank[4]) {
-    return rank[1];
+  else if (handRank[1] == handRank[2] && handRank[2] == handRank[3] && handRank[3] == handRank[4]) { // last 4 are same
+    // EXAMPLE: 2 3 3 3 3
+    return 1;
   }
   else {
-    return -1;
+    return 0;
   }
 
 }
 int Hand::FullHouse() {
-  int rank[5];
-  for (int i = 0; i < 5; ++i)
-    rank[i] = hand[i]->getRank();
-  if (rank[0] == rank[1]) {   // first pair the same
-    if (rank[1] == rank[2]) { // first three the same
-      if (rank[3] == rank[4]) // last two the same
-        return rank[0];
+  if (handRank[0] == handRank[1]) {     // first pair the same
+    if (handRank[1] == handRank[2]) {   // first three the same
+      if (handRank[3] == handRank[4]) { // last two the same
+        // EXAMPLE: 2 2 2 3 3
+        handRank[0] = handRank[1] = handRank[4]; // 3 3 2 3 3
+        handRank[3] = handRank[4] = handRank[2]; // 3 3 2 2 2
+        return 1;
+      }
       else
-        return -1;
+        return 0;
     }
-    else {                    // first three not the same
-      if (rank[2] == rank[3] && rank[3] == rank[4]) // last three the same
-        return rank[4];
+    else {                              // first pair the same
+      if (handRank[2] == handRank[3] && handRank[3] == handRank[4]) { // last three the same
+        // EXAMPLE: 2 2 3 3 3
+        return 1;
+      }
       else
-        return -1;
+        return 0;
     }
   }
   else
-    return -1;
+    return 0;
 }
 
 int Hand::Flush() {
@@ -217,100 +223,120 @@ int Hand::Flush() {
   for (int i = 0; i < 5; ++i)
     suit[i] = hand[i]->getSuit();
   if (suit[0] == suit[1] && suit[1] == suit[2] && suit[2] == suit[3] && suit[3] == suit[4])
-    return hand[4]->getRank();
+    return 1;
   else {
-    return -1;
+    return 0;
   }
-
 }
 
 int Hand::Straight() {
-  int highestCard = hand[4]->getRank();
-  int secondHighest = hand[3]->getRank();
-  int decrementer = highestCard;
-  if (highestCard == 14) { // Ace
-    if (secondHighest == 5) { // Ace is low
+  int decrementer = handRank[4];
+
+  if (handRank[4] == 14) { // Ace
+    if (handRank[3] == 5) { // Assume Ace low
+      decrementer = handRank[3];
       for (int i = 2; i >= 0; --i) { // check lower 3 cards
-        if (hand[i]->getRank() != --secondHighest) {
-          return -1;
+        if (handRank[i] != --decrementer) {
+          return 0;
         }
       }
-      return 5; // Straight flush with Ace low
+      return 1; // Straight flush with Ace low
     }
     else { // Ace is high
       for (int i = 3; i >= 0; --i) { // check lower 4 cards
-        if (hand[i]->getRank() != --decrementer) {
-          return -1;
+        if (handRank[i] != --decrementer) {
+          return 0;
         }
       }
-      return highestCard;
+      return 1;
     }
   }
-  else { // regular run of cards with Ace high
+  else { // regular run of cards without Ace
     for (int i = 3; i >= 0; --i) { // check lower 4 cards
-      if (hand[i]->getRank() != --decrementer) {
-        return -1;
+      if (handRank[i] != --decrementer) {
+        return 0;
       }
     }
-    return highestCard;
+    return 1;
   }
-  return -1;
-
+  return 0;
 }
 
 int Hand::ThreeOfAKind() {
-  int rank[5];
-  for (int i = 0; i < 5; ++i)
-    rank[i] = hand[i]->getRank();
-  if (rank[0] == rank[1] && rank[1] == rank[2])
-    return rank[0];
-  else if (rank[1] == rank[2] && rank[2] == rank[3])
-    return rank[1];
-  else if (rank[2] == rank[3] && rank[3] == rank[4])
-    return rank[2];
+  if (handRank[0] == handRank[1] && handRank[1] == handRank[2]) {       // first 3 same
+    // EXAMPLE: 2 2 2 3 4
+    handRank[0] = handRank[4];                // 4 2 2 3 4
+    handRank[1] = handRank[3];                // 4 3 2 3 4
+    handRank[3] = handRank[4] = handRank[2];  // 4 3 2 2 2
+    return 1;
+  }
+  else if (handRank[1] == handRank[2] && handRank[2] == handRank[3]) {  // middle 3 same
+    // EXAMPLE: 2 3 3 3 4
+    handRank[1] = handRank[4];  // 2 4 3 3 4
+    handRank[4] = handRank[3];  // 2 4 3 3 3
+    return 1;
+  }
+  else if (handRank[2] == handRank[3] && handRank[3] == handRank[4])    // last 3 same
+    return 1;
   else
-    return -1;
+    return 0;
 
 }
 
 int Hand::TwoPair() {
-  int rank[5];
-  for (int i = 0; i < 5; ++i)
-    rank[i] = hand[i]->getRank();
-  if (rank[0] == rank[1]) {
-    if (rank[2] == rank[3])
-      return rank[3];
-    else if (rank[3] == rank[4])
-      return rank[4];
+  if (handRank[0] == handRank[1]) {     // 1 and 2 are a pair
+    if (handRank[2] == handRank[3]) {       // 3 and 4 are a pair
+      // EXAMPLE: 2 2 3 3 4
+      handRank[0] = handRank[4];  // 4 2 3 3 4
+      handRank[4] = handRank[3];  // 4 2 3 3 3
+      handRank[2] = handRank[1];  // 4 2 2 3 3
+      return 1;
+    }
+    else if (handRank[3] == handRank[4]) {  // 4 and 5 are a pair
+      // EXAMPLE: 2 2 3 4 4
+      handRank[0] = handRank[2];  // 3 2 3 4 4
+      handRank[2] = handRank[1];  // 3 2 2 4 4
+      return 1;
+    }
   }
-  else if (rank[1] == rank[2]) {
-    if (rank[3] == rank[4])
-      return rank[4];
+  else if (handRank[1] == handRank[2]) {  // 2 and 3 are a pair
+    if (handRank[3] == handRank[4])           // 4 and 5 are a pair
+      return 1;
   }
   else
-    return -1;
-  return -1;
+    return 0;
+  return 0;
 }
 
 int Hand::OnePair() {
-  int rank[5];
-  for (int i = 0; i < 5; ++i)
-    rank[i] = hand[i]->getRank();
-  if (rank[0] == rank[1])
-    return rank[0];
-  else if (rank[1] == rank[2])
-    return rank[1];
-  else if (rank[2] == rank[3])
-    return rank[2];
-  else if (rank[3] == rank[4])
-    return rank[3];
+  if (handRank[0] == handRank[1]) {       // 1 and 2 are a pair
+    // EXAMPLE: 2 2 3 4 5
+    int temp = handRank[0];   // handRank[0] == 2;
+    handRank[0] = handRank[2];        // 3 2 3 4 5
+    handRank[1] = handRank[3];        // 3 4 3 4 5
+    handRank[2] = handRank[4];        // 3 4 5 4 5
+    handRank[3] = handRank[4] = temp; // 3 4 5 2 2
+    return 1;
+  }
+  else if (handRank[1] == handRank[2]) {  // 2 and 3 are a pair
+    // EXAMPLE: 2 3 3 4 5
+    int temp = handRank[1];   // handRank[1] = 3;
+    handRank[1] = handRank[3];        // 2 4 3 4 5
+    handRank[2] = handRank[4];        // 2 4 5 4 5
+    handRank[3] = handRank[4] = temp; // 2 4 5 3 3
+    return 1;
+  }
+  else if (handRank[2] == handRank[3]) {  // 3 and 4 are a pair
+    // EXAMPLE: 2 3 4 4 5
+    handRank[2] = handRank[4];  // 2 3 5 4 5
+    handRank[4] = handRank[3];  // 2 3 5 4 4
+    return 1;
+  }
+  else if (handRank[3] == handRank[4]) {  // 4 and 5 are a pair
+    // EXAMPLE: 2 3 4 5 5
+    return 1;
+  }
   else
-    return -1;
-
-}
-
-int Hand::HighCard() {
-
-  return hand[4]->getRank();
+    return 0;
 
 }
