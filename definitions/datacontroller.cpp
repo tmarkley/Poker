@@ -1,6 +1,6 @@
 #include "../headers/datacontroller.h"
 
-#define DEV_TEST true
+#define DEV_TEST false
 
 DataController::DataController() {
 
