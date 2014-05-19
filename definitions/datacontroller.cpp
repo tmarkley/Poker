@@ -92,8 +92,12 @@ void DataController::dealHands() {
     }
     cout << endl << "Best Hand: Player " << getWinningHand() << endl;
   }
-  if (!DEV_TEST)
+  if (!DEV_TEST) {
+    for (int i = 0; i < 3; ++i) {
+      hands[i].findBestHand();
+    }
     cout << endl << "Best Hand: Player " << getWinningHand() << endl;
+  }
 }
 
 string DataController::getCurrentPlayersCard(int index) {
