@@ -83,7 +83,7 @@ int NameScreen::didClickButton(int x, int y) {
 
   if (buttonClicked == 0) {
     if (!nameError) {
-      cout << "next!" << endl;
+      dataController->setPlayerNames(textInBox);
       start_time = getCurrentTime();
       return 2;//return one cause want to advance to next screen in main class
     }

@@ -64,14 +64,14 @@ bool startDealing = false;
 bool doneDealing = false;
 bool doneSpreading = false;
 double start_time;
-double dealing_delay = 0;
-// double dealing_delay = 0.5;
-double animation_duration = 0;
-// double animation_duration = 1;
-double dealing_duration = 0;
-// double dealing_duration = 0.3;
-double spread_duration = 0;
-// double spread_duration = 1.25;
+// double dealing_delay = 0;
+double dealing_delay = 0.5;
+// double animation_duration = 0;
+double animation_duration = 1;
+// double dealing_duration = 0;
+double dealing_duration = 0.3;
+// double spread_duration = 0;
+double spread_duration = 1.25;
 double current_time;
 double elapsed_time;
 int current_card = 0;
@@ -256,6 +256,8 @@ void MainScreen::drawMainScreen() {
     drawCardsToScreen(dataController);
 
     drawTexture(loadTexture(dataController->getCurrentChip().c_str()), 990, 610, 140, 140, 1.0, pi/dataController->getChipRotation());
+
+    drawLargestText(dataController->getCurrentPlayersName(), 1010, 550);
 
     char buff[20];
     long money = dataController->getCurrentPlayersCurrencyMoneysAndShit();

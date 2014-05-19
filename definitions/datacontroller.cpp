@@ -15,10 +15,6 @@ DataController::DataController() {
 
   dealHands();
 
-  playerNames.push_back("Player 1");
-  playerNames.push_back("Player 2");
-  playerNames.push_back("Playser 3");
-
   srand(time(0));
   currentPlayer = rand() % 3;
   
@@ -132,6 +128,19 @@ void DataController::nextPlayer() {
   srand(time(0));
   chipRotation = rand() % 5 + (currentPlayer+1);
   moneys[currentPlayer] += chipRotation;
+}
+
+string DataController::getCurrentPlayersName() {
+
+  return playerNames[currentPlayer];
+}
+
+void DataController::setPlayerNames(vector<string> names) {
+
+  for (int i=0; i < names.size(); i++) {
+    playerNames.push_back(names[i]);
+  }
+
 }
 
 int myrandom(int i) { return rand()%i;}

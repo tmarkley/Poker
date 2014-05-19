@@ -38,10 +38,12 @@ public:
   string getCurrentPlayersCard(int index);
   Hand & getCurrentPlayersHand();
   int getCurrentPlayer();
+  string getCurrentPlayersName();
   string getCurrentChip();
   int getChipRotation();
   int getCurrentPlayersCurrencyMoneysAndShit();
-  
+
+  void setPlayerNames(vector<string>);  
   void nextPlayer();
   void loadTextures();
 
