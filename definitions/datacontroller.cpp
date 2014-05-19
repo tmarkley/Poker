@@ -1,5 +1,7 @@
 #include "../headers/datacontroller.h"
 
+#define DEV_TEST true
+
 DataController::DataController() {
 
   turns = 0;
@@ -71,12 +73,20 @@ void DataController::dealHands() {
       deck.pop_back();
     }
   }
-
+  if (DEV_TEST) {
+    hands[currentPlayer].rigHand();
+  }
 }
 
 string DataController::getCurrentPlayersCard(int index) {
 
   return "images/cards/medium/" + hands[currentPlayer].getCard(index);
+
+}
+
+Hand & DataController::getCurrentPlayersHand() {
+
+  return hands[currentPlayer];
 
 }
 

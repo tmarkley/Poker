@@ -20,8 +20,12 @@ public:
 	void addCard(Card);
 	void clearHand();
 
-	int findBestHand();
+	void rigHand();
+	int getHighRank();
+	string getBestHand();
 
+	void printHand();
+	int findBestHand();
 	int StraightFlush();
 	int FourOfAKind();
 	int FullHouse();

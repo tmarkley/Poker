@@ -35,6 +35,7 @@ public:
   
   // getter functions
   string getCurrentPlayersCard(int index);
+  Hand & getCurrentPlayersHand();
   int getCurrentPlayer();
   string getCurrentChip();
   int getChipRotation();

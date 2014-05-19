@@ -14,6 +14,19 @@
 
 using namespace std;
 
+// FOR TESTING PURPOSES ONLY ///////////////////////////////////////////////////
+string s1 = "A_hearts.pam";
+string s2 = "K_hearts.pam";
+string s3 = "Q_hearts.pam";
+string s4 = "J_hearts.pam";
+string s5 = "T_hearts.pam";
+Card card1(s1);
+Card card2(s2);
+Card card3(s3);
+Card card4(s4);
+Card card5(s5);
+// FOR TESTING PURPOSES ONLY ///////////////////////////////////////////////////
+
 bool mouseIsDragging = false;
 
 bool fullscreen = false;
