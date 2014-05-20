@@ -2,6 +2,12 @@
 #include "../headers/datacontroller.h"
 
 #define DEV_TEST false
+#define pi 3.1415926535
+
+extern bool closeCardFan;
+extern double start_time;
+extern double getCurrentTime();
+extern double table_orientation;
 
 DataController::DataController() {
 
@@ -130,8 +136,6 @@ int DataController::getWinningHand() {
   bool player[3] = {true, true, true};
 
   for (int i = 5; i >= 0; --i) {
-    // for (int j = 0; j < 3; ++j) 
-      // cout << "player[" << j << "]: " << player[j] << endl;
     int maximum;
     if (player[0] && player[1] && player[2])
       maximum = max(hands[0].getHandRank(i), max(hands[1].getHandRank(i), hands[2].getHandRank()));
@@ -143,7 +147,6 @@ int DataController::getWinningHand() {
       else // player[0] && player[2]
         maximum = max(hands[0].getHandRank(i), hands[2].getHandRank(i));
     }
-    // cout << "maximum: " << maximum << endl;
     for (int j = 0; j < 3; ++j) {
       if (hands[j].getHandRank(i) < maximum)
         player[j] = false;
@@ -157,34 +160,6 @@ int DataController::getWinningHand() {
   return -1;
   // CHANGE THIS EVENTUALLY ///////////////
 
-  // int currentBest = 0;
-  // for (int i = 5; i >= 0; --i) {
-  //   for (int j = 0; j < 3; ++j) 
-  //     cout << "player[" << j << "]: " << player[j] << endl;
-  //   int best;
-  //   if (player[0]) {
-  //     best = hands[0].getHandRank(i);
-  //   }
-  //   else if (player[1]) {
-  //     currentBest = 1;
-  //     best = hands[1].getHandRank(i);
-  //   }
-  //   else
-  //     return 2; // player3 won
-  //   cout << "best: " << best << endl;
-  //   for (int j = 0; j < 3; ++j) {
-  //     if (hands[j].getHandRank(i) < best) {
-  //       player[j] = false;
-  //     }
-  //     else if (hands[j].getHandRank(i) > best) {
-  //       player[currentBest] = false;
-  //     }
-  //   }
-  //   if (downToOne(player)) {
-  //     return downToOne(player);
-  //   }
-  // }
-  // return downToOne(player);
 }
 
 Hand & DataController::getCurrentPlayersHand() {
@@ -226,6 +201,9 @@ void DataController::nextPlayer() {
     clearDeck();
     createDeck();
     dealHands();
+    table_orientation -= pi/2;
+    closeCardFan = true;
+    start_time = getCurrentTime();
     turns = 0;
   }
   srand(time(0));

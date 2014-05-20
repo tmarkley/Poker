@@ -63,21 +63,24 @@ bool changePlayers = false;
 bool startDealing = false;
 bool doneDealing = false;
 bool doneSpreading = false;
+bool closeCardFan = false;
+bool returnCardsToDealer = false;
+bool nextTurnEnabled = false;
+
 double start_time;
-// double dealing_delay = 0;
-double dealing_delay = 0.5;
-// double animation_duration = 0;
+double dealing_delay = 0.4;
 double animation_duration = 1;
-// double dealing_duration = 0;
-double dealing_duration = 0.3;
-// double spread_duration = 0;
-double spread_duration = 1.25;
+double dealing_duration = 0.25;
+double spread_duration = 1;
+double close_card_fan_duration = 1;
+double return_cards_duration = 1;
+
 double current_time;
 double elapsed_time;
 double table_orientation = 0;
 int current_card = 0;
 string tempCards[5];
-float number;
+float winPercentage;
 
 void animateTexture(string card, double x_start, double y_start, double width_start, double height_start, double alpha_start, double rotation_start, double x_end, double y_end, double width_end, double height_end, double alpha_end, double rotation_end, double elapsed_time, double duration, double x_augment = 0, double y_augment = 0, double width_augment = 0, double height_augment = 0, double alpha_augment = 0, double rotation_augment = 0) {
   double x = (x_end-x_start)*(elapsed_time/duration) + x_start + x_augment;
@@ -92,28 +95,28 @@ void animateTexture(string card, double x_start, double y_start, double width_st
 void dealCardsAnimation(DataController * dataController, double elapsed_time, int current_card) {
   if (current_card == 15) {
     doneDealing = true;
+    doneSpreading = false;
     start_time = getCurrentTime();
     return;
   }
   switch (current_card % 3) {
     case 2: {
-      animateTexture("images/cards/large/cardback.pam", 525, -100, 150, 210, 1.0, 0, 1300, 300, 150, 210, 1.0, pi/2, elapsed_time, dealing_duration);
+      animateTexture("images/cards/large/cardback.pam", 525, -200, 150, 210, 1.0, 0, 1300, 300, 150, 210, 1.0, pi/2, elapsed_time, dealing_duration);
       break;
     }
     case 0: {
-      animateTexture("images/cards/large/cardback.pam", 525, -100, 150, 210, 1.0, 0, -200, 300, 150, 210, 1.0, -pi/2, elapsed_time, dealing_duration);
+      animateTexture("images/cards/large/cardback.pam", 525, -200, 150, 210, 1.0, 0, -200, 300, 150, 210, 1.0, -pi/2, elapsed_time, dealing_duration);
       break;
     }
     case 1: {
-      animateTexture("images/cards/large/cardback.pam", 525, -100, 150, 210, 1.0, 0, 525, 850, 150, 210, 1.0, pi, elapsed_time, dealing_duration);
+      animateTexture("images/cards/large/cardback.pam", 525, -200, 150, 210, 1.0, 0, 525, 850, 150, 210, 1.0, pi, elapsed_time, dealing_duration);
       break;
     }
   }
 }
 
 void changePlayersAnimation(DataController * dataController, double elapsed_time) {
-  // animateTexture("images/backgrounds/pam/mainscreen.pam", 0, 0, 1200, 750, 1.0, 0, 0, 0, 1200, 750, 1.0, pi/2, elapsed_time, animation_duration);
-  animateTexture("images/backgrounds/pam/maintable.pam", -600, -375, 2400, 1500, 1.0, table_orientation-pi/2, -600, -375, 2400, 1500, 1.0, table_orientation+pi/8, elapsed_time, spread_duration); // honestly, I have no idea why adding pi/8 makes it work better, but it does.
+  animateTexture("images/backgrounds/pam/maintable.pam", -600, -375, 2400, 1500, 1.0, table_orientation-pi/2, -600, -375, 2400, 1500, 1.0, table_orientation, elapsed_time, spread_duration);
   
   animateTexture("images/cards/large/cardback.pam", 58, 190, 150, 210, 1.0, -pi/2 + pi/8, 270, 430, 200, 280, 0.0, pi/8, elapsed_time, animation_duration);
   animateTexture(dataController->getCurrentPlayersCard(0), 58, 190, 150, 210, 0.0, -pi/2 + pi/8, 270, 430, 200, 280, 1.0, pi/8, elapsed_time, animation_duration);
@@ -142,7 +145,6 @@ void changePlayersAnimation(DataController * dataController, double elapsed_time
   animateTexture("images/cards/large/cardback.pam", 980, 250, 150, 210, 1.0, pi/2, 70, 250, 150, 210, 1.0, -pi/2, elapsed_time, animation_duration, 0, -250*sin((elapsed_time/animation_duration)*pi));
   animateTexture("images/cards/large/cardback.pam", 995, 220, 150, 210, 1.0, pi/2 - pi/16, 55, 280, 150, 210, 1.0, -pi/2 - pi/16, elapsed_time, animation_duration, 0, -250*sin((elapsed_time/animation_duration)*pi));
   animateTexture("images/cards/large/cardback.pam", 1010, 190, 150, 210, 1.0, pi/2 - pi/8, 40, 310, 150, 210, 1.0, -pi/2 - pi/8, elapsed_time, animation_duration, 0, -250*sin((elapsed_time/animation_duration)*pi));
-  // drawTexture(loadTexture("images/backgrounds/pam/mainoverlay.pam"), 0, 0, 1200, 750);
 
 }
 
@@ -164,6 +166,39 @@ void spreadCardsAnimation(DataController * dataController, double elapsed_time) 
   animateTexture("images/cards/large/cardback.pam", 1300, 300, 150, 210, 1.0, pi/2, 980, 250, 150, 210, 1.0, pi/2, elapsed_time, spread_duration);
   animateTexture("images/cards/large/cardback.pam", 1300, 300, 150, 210, 1.0, pi/2, 995, 220, 150, 210, 1.0, pi/2 - pi/16, elapsed_time, spread_duration);
   animateTexture("images/cards/large/cardback.pam", 1300, 300, 150, 210, 1.0, pi/2, 1010, 190, 150, 210, 1.0, pi/2 - pi/8, elapsed_time, spread_duration);
+}
+
+void closeCardFanAnimation(DataController * dataController, double elapsed_time) {
+  animateTexture("images/cards/large/cardback.pam", 58, 190, 150, 210, 1.0, -pi/2 + pi/8, 70, 250, 150, 210, 1, -pi/2, elapsed_time, close_card_fan_duration);
+  animateTexture("images/cards/large/cardback.pam", 67, 220, 150, 210, 1.0, -pi/2 + pi/16, 70, 250, 150, 210, 1, -pi/2, elapsed_time, close_card_fan_duration);
+  animateTexture("images/cards/large/cardback.pam", 70, 250, 150, 210, 1.0, -pi/2, 70, 250, 150, 210, 1, -pi/2, elapsed_time, close_card_fan_duration);
+  animateTexture("images/cards/large/cardback.pam", 55, 280, 150, 210, 1.0, -pi/2 - pi/16, 70, 250, 150, 210, 1, -pi/2, elapsed_time, close_card_fan_duration);
+  animateTexture("images/cards/large/cardback.pam", 40, 310, 150, 210, 1.0, -pi/2 - pi/8, 70, 250, 150, 210, 1, -pi/2, elapsed_time, close_card_fan_duration);
+
+  animateTexture(tempCards[0], 270, 430, 200, 280, 1, pi/8, 500, 400, 200, 280, 0, 0, elapsed_time, close_card_fan_duration);
+  animateTexture("images/cards/large/cardback.pam", 270, 430, 200, 280, 0, pi/8, 500, 400, 200, 280, 1, 0, elapsed_time, close_card_fan_duration);
+  animateTexture(tempCards[1], 385, 405, 200, 280, 1, pi/16, 500, 400, 200, 280, 0, 0, elapsed_time, close_card_fan_duration);
+  animateTexture("images/cards/large/cardback.pam", 385, 405, 200, 280, 0, pi/16, 500, 400, 200, 280, 1, 0, elapsed_time, close_card_fan_duration);
+  animateTexture(tempCards[2], 500, 400, 200, 280, 1, 0, 500, 400, 200, 280, 0, 0, elapsed_time, close_card_fan_duration);
+  animateTexture("images/cards/large/cardback.pam", 500, 400, 200, 280, 0, 0, 500, 400, 200, 280, 1, 0, elapsed_time, close_card_fan_duration);
+  animateTexture(tempCards[3], 615, 415, 200, 280, 1, -pi/16, 500, 400, 200, 280, 0, 0, elapsed_time, close_card_fan_duration);
+  animateTexture("images/cards/large/cardback.pam", 615, 415, 200, 280, 0, -pi/16, 500, 400, 200, 280, 1, 0, elapsed_time, close_card_fan_duration);
+  animateTexture(tempCards[4], 730, 450, 200, 280, 1, -pi/8, 500, 400, 200, 280, 0, 0, elapsed_time, close_card_fan_duration);
+  animateTexture("images/cards/large/cardback.pam", 730, 450, 200, 280, 0, -pi/8, 500, 400, 200, 280, 1, 0, elapsed_time, close_card_fan_duration);
+
+  animateTexture("images/cards/large/cardback.pam", 992, 310, 150, 210, 1.0, pi/2 + pi/8, 980, 250, 150, 210, 1, pi/2, elapsed_time, close_card_fan_duration);
+  animateTexture("images/cards/large/cardback.pam", 983, 280, 150, 210, 1.0, pi/2 + pi/16, 980, 250, 150, 210, 1, pi/2, elapsed_time, close_card_fan_duration);
+  animateTexture("images/cards/large/cardback.pam", 980, 250, 150, 210, 1.0, pi/2, 980, 250, 150, 210, 1, pi/2, elapsed_time, close_card_fan_duration);
+  animateTexture("images/cards/large/cardback.pam", 995, 220, 150, 210, 1.0, pi/2 - pi/16, 980, 250, 150, 210, 1, pi/2, elapsed_time, close_card_fan_duration);
+  animateTexture("images/cards/large/cardback.pam", 1010, 190, 150, 210, 1.0, pi/2 - pi/8, 980, 250, 150, 210, 1, pi/2, elapsed_time, close_card_fan_duration);
+}
+
+void returnCardsAnimation(DataController * dataController, double elapsed_time) {
+  animateTexture("images/cards/large/cardback.pam", 70, 250, 150, 210, 1, -pi/2, 525, -200, 150, 210, 1, 0, elapsed_time, close_card_fan_duration);
+
+  animateTexture("images/cards/large/cardback.pam", 500, 400, 200, 280, 1, 0, 525, -200, 150, 210, 1, 0, elapsed_time, close_card_fan_duration);
+
+  animateTexture("images/cards/large/cardback.pam", 980, 250, 150, 210, 1, pi/2, 525, -200, 150, 210, 1, 0, elapsed_time, close_card_fan_duration);
 }
 
 void drawCardsToScreen(DataController * dataController) {
@@ -213,9 +248,11 @@ void MainScreen::drawMainScreen() {
     }
     else {
       startDealing = true;
+      doneDealing = false;
       // drawTexture(loadTexture("images/backgrounds/pam/mainscreen.pam"), 0, 0, 1200, 750);
       start_time = getCurrentTime();
     }
+    glutPostRedisplay();
   }
   else if (!doneDealing) {
     setTime();
@@ -237,12 +274,40 @@ void MainScreen::drawMainScreen() {
     }
     else {
       doneSpreading = true;
+      nextTurnEnabled = true;
       spreadCardsAnimation(dataController, elapsed_time);
-      number = rand() % 100000;
-      number /= 1000.0;
+      winPercentage = rand() % 100000;
+      winPercentage /= 1000.0;
       // dataController->getCurrentPlayersHand().printHand();
       // dataController->getCurrentPlayersHand().findBestHand();
       // cout << dataController->getCurrentPlayersHand().getBestHand() << ", with rank " << dataController->getCurrentPlayersHand().getHandRank(4) << endl;
+    }
+    glutPostRedisplay();
+  }
+  else if (closeCardFan) {
+    setTime();
+    if (elapsed_time < close_card_fan_duration) {
+      closeCardFanAnimation(dataController, elapsed_time);
+    }
+    else {
+      closeCardFan = false;
+      closeCardFanAnimation(dataController, elapsed_time);
+      returnCardsToDealer = true;
+      start_time = getCurrentTime();
+    }
+    glutPostRedisplay();
+  }
+  else if (returnCardsToDealer) {
+    setTime();
+    if (elapsed_time < return_cards_duration) {
+      returnCardsAnimation(dataController, elapsed_time);
+    }
+    else {
+      changePlayers = false;
+      returnCardsToDealer = false;
+      startDealing = false;
+      current_card = 0;
+      returnCardsAnimation(dataController, elapsed_time);
     }
     glutPostRedisplay();
   }
@@ -252,6 +317,7 @@ void MainScreen::drawMainScreen() {
       changePlayersAnimation(dataController, elapsed_time);
     }
     else {
+      nextTurnEnabled = true;
       changePlayers = false;
       drawCardsToScreen(dataController);
     }
@@ -271,9 +337,9 @@ void MainScreen::drawMainScreen() {
     drawNumbers(buff, strlen(buff), 1020, 570, 0.6, false);
 
     char buff2[10];
-    // float number = rand() % 100000;
-    // number /= 1000.0;
-    sprintf(buff2, "%.2f", number);
+    // float winPercentage = rand() % 100000;
+    // winPercentage /= 1000.0;
+    sprintf(buff2, "%.2f", winPercentage);
     drawNumbers(buff2, strlen(buff2), 552, 300, 1, true);
   }
   drawTexture(loadTexture("images/backgrounds/pam/mainoverlay.pam"), 0, 0, 1200, 750);
@@ -352,17 +418,19 @@ int MainScreen::didClickButton(int x, int y) {
       currentScreen = RULES;
     }
     if (buttonClicked == 1) {
-      storeCards(dataController);
-      dataController->nextPlayer();
-      start_time = getCurrentTime();
-      table_orientation += pi/2;
-      changePlayers = true;
-      number = rand() % 100000;
-      number /= 1000.0;
-      // dataController->getCurrentPlayersHand().printHand();
-      // dataController->getCurrentPlayersHand().findBestHand();
-      // cout << dataController->getCurrentPlayersHand().getBestHand() << ", with rank " << dataController->getCurrentPlayersHand().getHandRank(4) << endl;
-
+      if (nextTurnEnabled) {
+        storeCards(dataController);
+        dataController->nextPlayer();
+        start_time = getCurrentTime();
+        table_orientation += pi/2;
+        changePlayers = true;
+        nextTurnEnabled = false;
+        winPercentage = rand() % 100000;
+        winPercentage /= 1000.0;
+        // dataController->getCurrentPlayersHand().printHand();
+        // dataController->getCurrentPlayersHand().findBestHand();
+        // cout << dataController->getCurrentPlayersHand().getBestHand() << ", with rank " << dataController->getCurrentPlayersHand().getHandRank(4) << endl;
+      }
     }
   }
   else {
