@@ -244,12 +244,10 @@ void MainScreen::drawMainScreen() {
   if (!startDealing) {
     setTime();
     if (elapsed_time < dealing_delay) {
-      // drawTexture(loadTexture("images/backgrounds/pam/mainscreen.pam"), 0, 0, 1200, 750);
     }
     else {
       startDealing = true;
       doneDealing = false;
-      // drawTexture(loadTexture("images/backgrounds/pam/mainscreen.pam"), 0, 0, 1200, 750);
       start_time = getCurrentTime();
     }
     glutPostRedisplay();
@@ -420,6 +418,8 @@ int MainScreen::didClickButton(int x, int y) {
     }
     if (buttonClicked == 1) {
       if (nextTurnEnabled) {
+        
+        dataController->getCurrentPlayersHand().findBestHand();
         storeCards(dataController);
         dataController->nextPlayer();
         start_time = getCurrentTime();
@@ -429,7 +429,6 @@ int MainScreen::didClickButton(int x, int y) {
         winPercentage = rand() % 100000;
         winPercentage /= 1000.0;
         // dataController->getCurrentPlayersHand().printHand();
-        // dataController->getCurrentPlayersHand().findBestHand();
         // cout << dataController->getCurrentPlayersHand().getBestHand() << ", with rank " << dataController->getCurrentPlayersHand().getHandRank(4) << endl;
       }
     }

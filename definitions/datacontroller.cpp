@@ -99,10 +99,10 @@ void DataController::dealHands() {
     cout << endl << "Best Hand: Player " << getWinningHand() << endl;
   }
   if (!DEV_TEST) {
-    for (int i = 0; i < 3; ++i) {
-      hands[i].findBestHand();
-    }
-    cout << endl << "Best Hand: Player " << getWinningHand() << endl;
+    // for (int i = 0; i < 3; ++i) {
+    //   hands[i].findBestHand();
+    // }
+    // cout << endl << "Best Hand: Player " << getWinningHand() << endl;
   }
 }
 
@@ -196,6 +196,7 @@ void DataController::nextPlayer() {
 
   currentPlayer = (currentPlayer + 1) % 3;
   if (++turns == 3) {
+    cout << "Best Hand: Player " << getWinningHand() << endl;
     for (int i=0; i < 3; i++)
       hands[i].clearHand();
     clearDeck();
