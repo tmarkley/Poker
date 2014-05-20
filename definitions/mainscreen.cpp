@@ -101,22 +101,22 @@ void dealCardsAnimation(DataController * dataController, double elapsed_time, in
   }
   switch (current_card % 3) {
     case 2: {
-      animateTexture("images/cards/large/cardback.pam", 525, -200, 150, 210, 1.0, 0, 1300, 300, 150, 210, 1.0, pi/2, elapsed_time, dealing_duration);
+      animateTexture("images/cards/large/cardback.pam", 525, -300, 150, 210, 1.0, 0, 1300, 300, 150, 210, 1.0, pi/2, elapsed_time, dealing_duration);
       break;
     }
     case 0: {
-      animateTexture("images/cards/large/cardback.pam", 525, -200, 150, 210, 1.0, 0, -200, 300, 150, 210, 1.0, -pi/2, elapsed_time, dealing_duration);
+      animateTexture("images/cards/large/cardback.pam", 525, -300, 150, 210, 1.0, 0, -200, 300, 150, 210, 1.0, -pi/2, elapsed_time, dealing_duration);
       break;
     }
     case 1: {
-      animateTexture("images/cards/large/cardback.pam", 525, -200, 150, 210, 1.0, 0, 525, 850, 150, 210, 1.0, pi, elapsed_time, dealing_duration);
+      animateTexture("images/cards/large/cardback.pam", 525, -300, 150, 210, 1.0, 0, 525, 850, 150, 210, 1.0, pi, elapsed_time, dealing_duration);
       break;
     }
   }
 }
 
 void changePlayersAnimation(DataController * dataController, double elapsed_time) {
-  animateTexture("images/backgrounds/pam/maintable.pam", -600, -375, 2400, 1500, 1.0, table_orientation-pi/2, -600, -375, 2400, 1500, 1.0, table_orientation, elapsed_time, spread_duration);
+  animateTexture("images/backgrounds/pam/maintable.pam", -125, -375, 1450, 1450, 1.0, table_orientation-pi/2, -125, -375, 1450, 1450, 1.0, table_orientation, elapsed_time, spread_duration);
   
   animateTexture("images/cards/large/cardback.pam", 58, 190, 150, 210, 1.0, -pi/2 + pi/8, 270, 430, 200, 280, 0.0, pi/8, elapsed_time, animation_duration);
   animateTexture(dataController->getCurrentPlayersCard(0), 58, 190, 150, 210, 0.0, -pi/2 + pi/8, 270, 430, 200, 280, 1.0, pi/8, elapsed_time, animation_duration);
@@ -194,11 +194,11 @@ void closeCardFanAnimation(DataController * dataController, double elapsed_time)
 }
 
 void returnCardsAnimation(DataController * dataController, double elapsed_time) {
-  animateTexture("images/cards/large/cardback.pam", 70, 250, 150, 210, 1, -pi/2, 525, -200, 150, 210, 1, 0, elapsed_time, close_card_fan_duration);
+  animateTexture("images/cards/large/cardback.pam", 70, 250, 150, 210, 1, -pi/2, 525, -300, 150, 210, 1, 0, elapsed_time, close_card_fan_duration);
 
-  animateTexture("images/cards/large/cardback.pam", 500, 400, 200, 280, 1, 0, 525, -200, 150, 210, 1, 0, elapsed_time, close_card_fan_duration);
+  animateTexture("images/cards/large/cardback.pam", 500, 400, 200, 280, 1, 0, 525, -300, 150, 210, 1, 0, elapsed_time, close_card_fan_duration);
 
-  animateTexture("images/cards/large/cardback.pam", 980, 250, 150, 210, 1, pi/2, 525, -200, 150, 210, 1, 0, elapsed_time, close_card_fan_duration);
+  animateTexture("images/cards/large/cardback.pam", 980, 250, 150, 210, 1, pi/2, 525, -300, 150, 210, 1, 0, elapsed_time, close_card_fan_duration);
 }
 
 void drawCardsToScreen(DataController * dataController) {
@@ -239,7 +239,7 @@ void MainScreen::drawMainScreen() {
     buttons.push_back(Button("", 230, 85, 952, 19, 0.098, 0.694, 0.173, 0.0, 0.2, 0.3));
   }
 
-  drawTexture(loadTexture("images/backgrounds/pam/maintable.pam"), -600, -375, 2400, 1500, 1, table_orientation);
+  drawTexture(loadTexture("images/backgrounds/pam/maintable.pam"), -125, -375, 1450, 1450, 1, table_orientation);
   
   if (!startDealing) {
     setTime();
@@ -307,6 +307,7 @@ void MainScreen::drawMainScreen() {
       returnCardsToDealer = false;
       startDealing = false;
       current_card = 0;
+      start_time = getCurrentTime();
       returnCardsAnimation(dataController, elapsed_time);
     }
     glutPostRedisplay();
