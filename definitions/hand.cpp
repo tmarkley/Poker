@@ -1,5 +1,7 @@
 #include "../headers/hand.h"
 
+#define TOTALCOMBOS 2598960
+
 vector<Card *> Hand::getCards() {
 	
 	return hand;
@@ -29,6 +31,9 @@ void Hand::addCard(Card c) {
     hand.insert(it, new Card(c.getImageName()));
   }
 
+  if (hand.size() == 5)
+    findBestHand();
+
 }
 
 // FOR TESTING PURPOSES ONLY /////////////////////////////////////////////
@@ -57,55 +62,98 @@ void Hand::clearHand() {
 
 int Hand::findBestHand() {
 
-  // int rank = 0;
   if (StraightFlush()) {
     handRank[5] = 8;
     bestHand = "Straight Flush";
+    findPercentages(8);
     return 8;
   }
   else if (FourOfAKind()) {
     handRank[5] = 7;
     bestHand = "Four Of A Kind";
+    findPercentages(7);
     return 7;
   }
   else if (FullHouse()) {
     handRank[5] = 6;
     bestHand = "Full House";
+    findPercentages(6);
     return 6;
   }
   else if (Flush()) {
     handRank[5] = 5;
     bestHand = "Flush";
+    findPercentages(5);
     return 5;
   }
   else if (Straight()) {
     handRank[5] = 4;
     bestHand = "Straight";
+    findPercentages(4);
     return 4;
   }
   else if (ThreeOfAKind()) {
     handRank[5] = 3;
     bestHand = "Three Of A Kind";
+    findPercentages(3);
     return 3;
   }
   else if (TwoPair()) {
     handRank[5] = 2;
     bestHand = "Two Pair";
+    findPercentages(2);
     return 2;
   }
   else if (OnePair()) {
     handRank[5] = 1;
     bestHand = "One Pair";
+    findPercentages(1);
     return 1;
   }
   else {
     handRank[5] = 0;
     bestHand = "High Card";
+    findPercentages(0);
     return 0;
   }
 
 }
 
+void Hand::findPercentages(int bestHand) {
+
+  double percents[9]; 
+  percents[8] = (4.0*10.0)/TOTALCOMBOS;
+  percents[7] = ((13.0*1.0) * (12.0*4.0))/TOTALCOMBOS;
+  percents[6] = ((13.0*4.0) * (12.0*6.0))/TOTALCOMBOS;
+  percents[5] = ((4.0*1287.0) - 40.0)/TOTALCOMBOS; // 1287 = 13 choose 5
+  percents[4] = ((10.0*1024.0) - 40.0)/TOTALCOMBOS; // 1024 = 4^5
+  percents[3] = ((13.0*4.0) * (66.0*4.0*4.0))/TOTALCOMBOS; // first 4 = 4 choose 3, 66 = 12 choose 2
+  percents[2] = ((78.0*6.0*6.0) * (11.0*4.0))/TOTALCOMBOS; // 76=13 choose 2,6=4 choose 2
+  percents[1] = ((13.0*6.0) * (220.0*64.0))/TOTALCOMBOS; // 6=4 choose 2, 220=12 choose 3, 64=4^3
+  percents[0] = ((1287.0-10.0) * (1024.0-4.0))/TOTALCOMBOS;
+
+  double bottom[9] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; // lowest any of the percentages can be for a hand
+
+  for (int i=1; i < 9; i++) {
+    for (int j=i-1; j >= 0; j--) {
+      bottom[i] += percents[j];
+    }
+  }
+
+  double higher = 4.0*(14.0-(double)handRank[4]); // how many cards are higher
+  double adjustment = 0;
+  if (bestHand == 0)
+    adjustment = (32.0-higher)/32.0;
+  else if (bestHand == 8 || bestHand == 5 || bestHand == 4)
+    adjustment = (36.0-higher)/36.0;
+  else
+    adjustment = (52.0-higher)/52.0;
+
+  percentage = percents[bestHand] * adjustment;
+  percentage += bottom[bestHand];
+  percentage *= 100;
+
+}
 
 void Hand::printHand() {
   string suits[] = {"Clubs", "Diamonds", "Hearts", "Spades"};
@@ -131,6 +179,12 @@ int Hand::getHandRank(int index) {
 string Hand::getBestHand() {
 
   return bestHand;
+
+}
+
+double Hand::getHandPercentage() {
+
+  return percentage;
 
 }
 

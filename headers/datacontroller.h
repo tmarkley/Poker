@@ -21,7 +21,7 @@ class DataController {
   int turns;
   vector<string> chip;
   int chipRotation; // this is very necessary.
-  vector<int> moneys;
+  vector<long> moneys;
 
 public:
 

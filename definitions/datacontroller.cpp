@@ -32,9 +32,9 @@ DataController::DataController() {
 
   chipRotation = 2;
 
-  moneys.push_back(20000);
-  moneys.push_back(1232340);
-  moneys.push_back(4340);
+  moneys.push_back(500);
+  moneys.push_back(500);
+  moneys.push_back(500);
 
 }
 
@@ -84,7 +84,7 @@ void DataController::dealHands() {
   if (DEV_TEST) {
     // hands[currentPlayer].rigHand();
     for (int i = 0; i < 3; ++i) {
-      hands[i].findBestHand();
+      // hands[i].findBestHand();
       cout << "Player " << i << "'s Hand" << endl;
       cout << "~~~~~~~~~~~~~~" << endl;
       hands[i].printHand();
@@ -96,11 +96,12 @@ void DataController::dealHands() {
       }
       cout << endl << endl;
     }
-    cout << endl << "Best Hand: Player " << getWinningHand() << endl;
+    cout << endl << "Best Hand: " << playerNames[getWinningHand()] << endl;
   }
   if (!DEV_TEST) {
     // for (int i = 0; i < 3; ++i) {
     //   hands[i].findBestHand();
+    //   cout << playerNames[i] << "'s percentage: " << hands[i].getHandPercentage() << endl;
     // }
     // cout << endl << "Best Hand: Player " << getWinningHand() << endl;
   }
@@ -196,7 +197,11 @@ void DataController::nextPlayer() {
 
   currentPlayer = (currentPlayer + 1) % 3;
   if (++turns == 3) {
-    cout << "Best Hand: Player " << getWinningHand() << endl;
+    cout << endl << "Best Hand: " << playerNames[getWinningHand()] << endl;
+    moneys[getWinningHand()] += 75;
+    moneys[0] -= 25;
+    moneys[1] -= 25;
+    moneys[2] -= 25;
     for (int i=0; i < 3; i++)
       hands[i].clearHand();
     clearDeck();
@@ -209,7 +214,7 @@ void DataController::nextPlayer() {
   }
   srand(time(0));
   chipRotation = rand() % 5 + (currentPlayer+1);
-  moneys[currentPlayer] += chipRotation;
+  // moneys[currentPlayer] += chipRotation;
 }
 
 string DataController::getCurrentPlayersName() {
