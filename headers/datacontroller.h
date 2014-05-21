@@ -18,10 +18,13 @@ class DataController {
   vector<Hand> hands;
   int currentPlayer;
   vector<string> playerNames;
+  string handWinner;
+  int winningPlayer;
   int turns;
   vector<string> chip;
   int chipRotation; // this is very necessary.
   vector<int> moneys;
+  double moneyPool;
 
 public:
 
@@ -36,8 +39,14 @@ public:
   
   // getter functions
   int getWinningHand();
+  int getWinner();
+  int getTurns();
+  void setTurns(int t);
+  void addToPool(double sum);
+  void claimPool(int player);
   string getCurrentPlayersCard(int index);
   Hand & getCurrentPlayersHand();
+  string getPlayersCard(int player, int card);
   int getCurrentPlayer();
   string getCurrentPlayersName();
   string getCurrentChip();
@@ -49,6 +58,7 @@ public:
   void loadTextures();
 
   void addMoney(int);
+  void subtractMoney(int);
 
 };
 

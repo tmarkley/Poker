@@ -16,11 +16,11 @@
 using namespace std;
 
 // FOR TESTING PURPOSES ONLY ///////////////////////////////////////////////////
-string s1 = "3_hearts.pam";
-string s2 = "4_diamonds.pam";
-string s3 = "4_spades.pam";
-string s4 = "3_diamonds.pam";
-string s5 = "5_clubs.pam";
+string s1 = "A_hearts.pam";
+string s2 = "K_hearts.pam";
+string s3 = "Q_hearts.pam";
+string s4 = "J_hearts.pam";
+string s5 = "T_hearts.pam";
 Card card1(s1);
 Card card2(s2);
 Card card3(s3);
@@ -213,7 +213,8 @@ void init(void)
 
   // welcome message
   cout << "Welcome to " << programName << "." << endl;
-
+  // load this here to prevent lag later on.
+  loadTexture("images/cards/large/cardback.pam");
   // dataController.loadTextures();
 }
 
