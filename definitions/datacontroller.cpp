@@ -272,6 +272,19 @@ void DataController::nextPlayer() {
 string DataController::getCurrentPlayersName() {
 
   return playerNames[currentPlayer];
+
+}
+
+string DataController::getPlayersName(int player) {
+
+  return playerNames[player];
+
+}
+
+string DataController::getPlayersBestHand(int player) {
+
+  return hands[player].getBestHand();
+  
 }
 
 void DataController::setPlayerNames(vector<string> names) {

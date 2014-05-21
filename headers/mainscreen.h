@@ -40,6 +40,7 @@ class MainScreen : public Screen {
   void drawMainScreen();
   void drawRulesScreen();
   void drawNumbers(char s[], int, int, int, float, bool);
+  void drawText(string, int, int, float, float);
   void removeCurrentButtons();
 
 };

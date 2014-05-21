@@ -65,6 +65,7 @@ int Hand::findBestHand() {
   if (StraightFlush()) {
     handRank[5] = 8;
     bestHand = "Straight Flush";
+    StraightFlush();
     findPercentages(8);
     return 8;
   }
@@ -217,7 +218,8 @@ int Hand::StraightFlush() {
           return 0;
         }
       }
-      return 1;
+      bestHand = "Royal Flush";
+      return 1; // Royal Flush
     }
   }
   else { // regular run of cards without Ace

@@ -47,6 +47,8 @@ public:
   string getCurrentPlayersCard(int index);
   Hand & getCurrentPlayersHand();
   string getPlayersCard(int player, int card);
+  string getPlayersName(int player);
+  string getPlayersBestHand(int player);
   int getCurrentPlayer();
   string getCurrentPlayersName();
   string getCurrentChip();
