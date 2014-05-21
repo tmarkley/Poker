@@ -9,8 +9,12 @@ else
 endif
 
 BINARIES = Poker
+OBJ_DIR = objects
 
-all: $(BINARIES)
+all: $(OBJ_DIR) $(BINARIES)
+
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
 
 Poker: objects/poker.o objects/screen.o objects/mainscreen.o objects/namescreen.o objects/welcomescreen.o objects/card.o objects/hand.o objects/datacontroller.o objects/drawingfunctions.o objects/button.o objects/texture.o
 	g++ $(OPTS) -o poker objects/poker.o objects/screen.o objects/mainscreen.o objects/namescreen.o objects/welcomescreen.o objects/card.o objects/hand.o objects/datacontroller.o objects/drawingfunctions.o objects/button.o objects/texture.o $(LIBS)
