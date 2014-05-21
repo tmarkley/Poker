@@ -577,7 +577,7 @@ int MainScreen::didClickButton(int x, int y) {
         if (waitForNextClick) {
           waitForNextClick = false;
           closeWinningCards = true;
-          cout << "winner: " << winner+1 << endl;
+          // cout << "winner: " << winner+1 << endl;
           dataController->claimPool(winner);
           start_time = getCurrentTime();
         }

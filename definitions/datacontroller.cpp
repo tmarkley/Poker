@@ -1,7 +1,7 @@
 #include <algorithm>
 #include "../headers/datacontroller.h"
 
-#define DEV_TEST true
+#define DEV_TEST false
 #define pi 3.1415926535
 
 extern bool displayWinner;
@@ -251,7 +251,7 @@ void DataController::nextPlayer() {
   currentPlayer = (currentPlayer + 1) % 3;
   if (++turns == 3) {
     getWinningHand();
-    cout << "Winner: " << handWinner << endl;
+    // cout << "Winner: " << handWinner << endl;
     for (int i=0; i < 3; i++)
       hands[i].clearHand();
     clearDeck();
