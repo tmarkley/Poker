@@ -523,15 +523,24 @@ void MainScreen::drawText(string text, int x_location, int y_location, float ker
     string pathname = "images/";
     if (text[i] >= 96)
       pathname+="letters/lower/pam/";
-    else if (text[i] <= 57) {
+    else if (text[i] >= 65 && text[i] <= 90) 
+      pathname+="letters/upper/pam/";
+    else { // (text[i] <= 57) // number or symbol
       pathname+="numbers/pam/";
       y_location -= (8*scale);
     }
-    else // text[i] >= 65 && text[i] <= 90
-      pathname+="letters/upper/pam/";
-    pathname+=text[i];
-    pathname+=".pam";
+    if (text[i] == '.') {
+      pathname+="period.pam";
+    }
+    else {
+      pathname+=text[i];
+      pathname+=".pam";
+    }
     switch (text[i]) {
+      case '.':
+        drawTexture(loadTexture(pathname.c_str()), x_location, y_location, 16*scale, 70*scale);
+        x_location-=(15*scale);
+        break;
       case '1':
         drawTexture(loadTexture(pathname.c_str()), x_location, y_location+(10*scale), 22*scale, 70*scale);
         x_location-=(5*scale);
@@ -640,6 +649,12 @@ void MainScreen::drawNumbers(char s[], int length, int x, int y, float scale, bo
       i++;
       spacing = 19*scale;
       continue;
+    }
+    else if (s[i] == '-') {
+      temp += "negative.pam";
+      drawTexture(loadTexture(temp.c_str()), xLocation, y, 24*scale, 70*scale);
+      i++;
+      spacing = 28*scale;
     }
     else if (s[i] == '1') { // damn 1
       temp += s[i];

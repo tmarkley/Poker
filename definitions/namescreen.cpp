@@ -134,7 +134,7 @@ void NameScreen::setTextBoxText(unsigned char theChar) {
       else if ( (theChar >= (int)'a' && theChar <= (int)'z') || 
                 (theChar >= (int)'A' && theChar <= (int)'Z') ||
                 (theChar >= (int)'0' && theChar <= (int)'9') ||
-                (theChar == (int)' ') ) { // check for number, letter, or space
+                (theChar == (int)' ') || (theChar == (int)'.') ) { // check for number, letter, or space
         // check that we don't overflow the box
         if ( textInBox[i].length() < 50 ) {
           textInBox[i] += theChar;
