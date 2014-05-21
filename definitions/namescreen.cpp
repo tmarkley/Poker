@@ -109,6 +109,16 @@ void NameScreen::isOnTextBoxes(int x, int y) {
 
 }
 
+bool NameScreen::isInTextBox() {
+
+  for (int i = 0; i < 3; ++i) {
+    if (textBoxIsClicked[i]) 
+      return 1;
+  }
+  return 0;
+  
+}
+
 void NameScreen::setTextBoxText(unsigned char theChar) {
 
   for (int i=0; i < 3; i++) {
@@ -121,9 +131,7 @@ void NameScreen::setTextBoxText(unsigned char theChar) {
             nameError = true;
         }
       }
-      else if ( (theChar >= (int)'a' && theChar <= (int)'z') || 
-                (theChar >= (int)'A' && theChar <= (int)'Z') ||
-                (theChar >= (int)'0' && theChar <= (int)'9')) { // check for number or letter
+      else if ( theChar >= 32 && theChar <= 126 ) { // check for printable character
         // check that we don't overflow the box
         if ( textInBox[i].length() < 50 ) {
           textInBox[i] += theChar;

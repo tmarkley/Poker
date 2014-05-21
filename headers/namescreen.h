@@ -21,6 +21,7 @@ class NameScreen : public Screen {
   void draw(bool shouldDrawButtons = true);
   void drawTextBoxes(int);
   void isOnTextBoxes(int, int);
+  bool isInTextBox();
   void setTextBoxText(unsigned char);
   void nextTextBox();
 

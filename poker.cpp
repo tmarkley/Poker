@@ -93,21 +93,25 @@ void keyboard( unsigned char c, int x, int y )
       break;
     case 'F':
     case 'f':
-      if (!fullscreen)  {
-        glutFullScreen();
-        fullscreen = true;
-      }
-      else {
-        glutReshapeWindow(WIDTH,HEIGHT);
-        fullscreen = false;
+      if (!namescreen.isInTextBox()) {
+        if (!fullscreen)  {
+          glutFullScreen();
+          fullscreen = true;
+        }
+        else {
+          glutReshapeWindow(WIDTH,HEIGHT);
+          fullscreen = false;
+        }
       }
       break;
     case 'q':
     case 'Q':
     case 27:
       // get rid of the window (as part of shutting down)
-      glutDestroyWindow(win);
-      exit(0);
+      if (!namescreen.isInTextBox()) {
+        glutDestroyWindow(win);
+        exit(0);
+      }
       break;
     default:
       break;
