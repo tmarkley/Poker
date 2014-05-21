@@ -35,12 +35,12 @@ class MainScreen : public Screen {
   void isOnButton(int x, int y);
   int didClickButton(int x, int y);
   void offButtons();
+  static void drawText(string, int, int, float, float);
 
  private:
   void drawMainScreen();
   void drawRulesScreen();
   void drawNumbers(char s[], int, int, int, float, bool);
-  void drawText(string, int, int, float, float);
   void removeCurrentButtons();
 
 };

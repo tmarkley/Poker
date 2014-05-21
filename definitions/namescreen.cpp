@@ -1,4 +1,5 @@
 #include "../headers/namescreen.h"
+#include "../headers/mainscreen.h"
 
 extern double start_time;
 extern double getCurrentTime();
@@ -66,8 +67,8 @@ void NameScreen::drawTextBoxes(int index) {
     glColor3f(.75, .75, .75);
   drawBox(455, 300 + 100*index + 5, 290, 40);
   glColor3f(0, 0, 0);  // black
-  drawLargestText(textInBox[index], 460, 300 + 100*index + 30);
-
+  // drawLargestText(textInBox[index], 460, 300 + 100*index + 30);
+  MainScreen::drawText(textInBox[index], 605, 310 + 100*index, 26, 0.5);
 }
 
 int NameScreen::didClickButton(int x, int y) {
@@ -136,7 +137,7 @@ void NameScreen::setTextBoxText(unsigned char theChar) {
                 (theChar >= (int)'0' && theChar <= (int)'9') ||
                 (theChar == (int)' ') || (theChar == (int)'.') ) { // check for number, letter, or space
         // check that we don't overflow the box
-        if ( textInBox[i].length() < 50 ) {
+        if ( textInBox[i].length() < 20 ) {
           textInBox[i] += theChar;
           if (nameError && !(textInBox[0] == "") && !(textInBox[1] == "") && !(textInBox[2] == ""))
             nameError = false;
