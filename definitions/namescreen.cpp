@@ -17,7 +17,7 @@ NameScreen::NameScreen(DataController *theDataController) : Screen(theDataContro
 
   nameError = false;
 
-  buttons.push_back(Button("", 230, 86, 946, 640, 0.098, 0.694, 0.173, 0.0, 0.2, 0.3));
+  buttons.push_back(Button("", 230, 86, 946, 640, 0.098, 0.694, 0.173, 0.0, 0.25, 0.3));
 
 }
 
@@ -131,7 +131,9 @@ void NameScreen::setTextBoxText(unsigned char theChar) {
             nameError = true;
         }
       }
-      else if ( theChar >= 32 && theChar <= 126 ) { // check for printable character
+      else if ( (theChar >= (int)'a' && theChar <= (int)'z') || 
+                (theChar >= (int)'A' && theChar <= (int)'Z') ||
+                (theChar >= (int)'0' && theChar <= (int)'9')) { // check for number or letter
         // check that we don't overflow the box
         if ( textInBox[i].length() < 50 ) {
           textInBox[i] += theChar;
@@ -139,7 +141,6 @@ void NameScreen::setTextBoxText(unsigned char theChar) {
             nameError = false;
         }
       }
-      break;
     }
   }
 

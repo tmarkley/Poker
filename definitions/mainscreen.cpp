@@ -331,8 +331,8 @@ void storeCards2(DataController * dataController, int p_num) {
 
 void MainScreen::drawMainScreen() {
   if (buttons.size() == 0) {
-    buttons.push_back(Button("", 230, 85, 20, 19, 0.098, 0.694, 0.173, 0.0, 0.2, 0.3));
-    buttons.push_back(Button("", 230, 85, 952, 19, 0.098, 0.694, 0.173, 0.0, 0.2, 0.3));
+    buttons.push_back(Button("", 230, 85, 20, 19, 0.098, 0.694, 0.173, 0.0, 0.25, 0.3));
+    buttons.push_back(Button("", 230, 85, 952, 19, 0.098, 0.694, 0.173, 0.0, 0.25, 0.3));
   }
 
   drawTexture(loadTexture("images/backgrounds/pam/maintable.pam"), -125, -375, 1450, 1450, 1, table_orientation);
@@ -556,7 +556,7 @@ void MainScreen::drawNumbers(char s[], int length, int x, int y, float scale, bo
 void MainScreen::drawRulesScreen() {
 
   if (buttons.size() == 0)
-    buttons.push_back(Button("", 285, 85, 40, 650, 0.0, 0.0, 0.0, 0.0, 0.2, 0.3));
+    buttons.push_back(Button("", 144, 55, 39, 674, 0.0, 0.0, 0.0, 0.0, 0.25, 0.3));
 
   drawTexture(loadTexture("images/backgrounds/pam/rulesscreen.pam"), 0, 0, WIDTH, HEIGHT);
   

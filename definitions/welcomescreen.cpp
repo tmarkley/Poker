@@ -93,7 +93,7 @@ void WelcomeScreen::drawAboutScreen() {
 
 
   if (buttons.size() == 0)
-    buttons.push_back(Button("", 285, 85, 40, 650, 0.0, 0.0, 0.0, 0.0, 0.2, 0.3));
+    buttons.push_back(Button("", 144, 55, 39, 674, 0.0, 0.0, 0.0, 0.0, 0.25, 0.3));
 
   drawTexture(loadTexture("images/backgrounds/pam/aboutscreen.pam"), 0, 0, WIDTH, HEIGHT);
 
@@ -102,7 +102,7 @@ void WelcomeScreen::drawAboutScreen() {
 void WelcomeScreen::drawRulesScreen() {
 
   if (buttons.size() == 0)
-    buttons.push_back(Button("", 285, 85, 40, 650, 0.0, 0.0, 0.0, 0.0, 0.2, 0.3));
+    buttons.push_back(Button("", 144, 55, 39, 674, 0.0, 0.0, 0.0, 0.0, 0.25, 0.3));
 
   drawTexture(loadTexture("images/backgrounds/pam/rulesscreen.pam"), 0, 0, WIDTH, HEIGHT);
   

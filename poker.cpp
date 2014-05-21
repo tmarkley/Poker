@@ -216,7 +216,7 @@ void init(void)
   // gluLookAt(0, 1.75, 5, 0, 1.75, 6, 0.0f, 1.0f, 0.0f);
 
   // welcome message
-  cout << "Welcome to " << programName << "." << endl;
+  cout << programName << ". " << "©2014, Andrew Crocker and Tommy Markley." << endl;
   // load this here to prevent lag later on.
   loadTexture("images/cards/large/cardback.pam");
   // dataController.loadTextures();
