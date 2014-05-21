@@ -23,8 +23,8 @@ class DataController {
   int turns;
   vector<string> chip;
   int chipRotation; // this is very necessary.
-  vector<int> moneys;
-  double moneyPool;
+  long moneyPool;
+  vector<long> moneys;
 
 public:
 
@@ -42,7 +42,7 @@ public:
   int getWinner();
   int getTurns();
   void setTurns(int t);
-  void addToPool(double sum);
+  void addToPool(long sum);
   void claimPool(int player);
   string getCurrentPlayersCard(int index);
   Hand & getCurrentPlayersHand();

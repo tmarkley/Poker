@@ -89,6 +89,7 @@ string tempCards[5];
 string tempCards2[5];
 float winPercentage;
 int winner;
+// float winPercentage;
 
 void animateTexture(string card, double x_start, double y_start, double width_start, double height_start, double alpha_start, double rotation_start, double x_end, double y_end, double width_end, double height_end, double alpha_end, double rotation_end, double elapsed_time, double duration, double x_augment = 0, double y_augment = 0, double width_augment = 0, double height_augment = 0, double alpha_augment = 0, double rotation_augment = 0) {
   double x = (x_end-x_start)*(elapsed_time/duration) + x_start + x_augment;
@@ -394,12 +395,14 @@ void MainScreen::drawMainScreen() {
       openCardFan = false;
       nextTurnEnabled = true;
       spreadCardsAnimation(dataController, elapsed_time);
-      winPercentage = rand() % 100000;
-      winPercentage /= 1000.0;
+      // winPercentage = rand() % 100000;
+      // winPercentage /= 1000.0;
       dataController->getWinningHand();
       winner = dataController->getWinner();
       storeCards2(dataController, winner);
       // cout << "winner: " << winner+1 << endl;
+      // winPercentage = rand() % 100000;
+      // winPercentage /= 1000.0;
       // dataController->getCurrentPlayersHand().printHand();
       // dataController->getCurrentPlayersHand().findBestHand();
       // cout << dataController->getCurrentPlayersHand().getBestHand() << ", with rank " << dataController->getCurrentPlayersHand().getHandRank(4) << endl;
@@ -491,7 +494,7 @@ void MainScreen::drawMainScreen() {
     char buff2[10];
     // float winPercentage = rand() % 100000;
     // winPercentage /= 1000.0;
-    sprintf(buff2, "%.2f", winPercentage);
+    sprintf(buff2, "%.2f", dataController->getCurrentPlayersHand().getHandPercentage());
     drawNumbers(buff2, strlen(buff2), 552, 275, 1, true);
   }
   // drawTexture(loadTexture("images/backgrounds/pam/mainoverlay.pam"), 0, 0, 1200, 750);
@@ -590,24 +593,24 @@ int MainScreen::didClickButton(int x, int y) {
         }
         else {
           // cout << "changing players" << endl;
-        storeCards(dataController);
-          
-        changePlayers = true;
-        dataController->nextPlayer();
-        // if (++player_num != 3) {
-        //   cout << "player_num: " << player_num << endl;
-        //   dataController->nextPlayer();
-        // }
-        // else {
-        //   changePlayers = false;
-        //   displayWinner = true;
-        //   // dataController->setTurns(-1);
-        //   cout << "resetting player num" << endl;
-        //   player_num = 0;
-        // }
-        start_time = getCurrentTime();
-        table_orientation += pi/2;
-        nextTurnEnabled = false;
+          storeCards(dataController);
+            
+          changePlayers = true;
+          dataController->nextPlayer();
+          // if (++player_num != 3) {
+          //   cout << "player_num: " << player_num << endl;
+          //   dataController->nextPlayer();
+          // }
+          // else {
+          //   changePlayers = false;
+          //   displayWinner = true;
+          //   // dataController->setTurns(-1);
+          //   cout << "resetting player num" << endl;
+          //   player_num = 0;
+          // }
+          start_time = getCurrentTime();
+          table_orientation += pi/2;
+          nextTurnEnabled = false;
         }
         // winPercentage = rand() % 100000;
         // winPercentage /= 1000.0;

@@ -32,7 +32,9 @@ DataController::DataController() {
   chip.push_back("bluechip.pam");
 
   chipRotation = 2;
+
   moneyPool = 0;
+
   moneys.push_back(500);
   moneys.push_back(500);
   moneys.push_back(500);
@@ -84,8 +86,8 @@ void DataController::dealHands() {
   }
   if (DEV_TEST) {
     for (int i = 0; i < 3; ++i) {
-      hands[i].findBestHand();
       cout << "Player " << i+1 << "'s Hand" << endl;
+      // hands[i].findBestHand();
       cout << "~~~~~~~~~~~~~~" << endl;
       hands[i].printHand();
       cout << "~~~~~~~~~~~~~~" << endl;
@@ -103,6 +105,7 @@ void DataController::dealHands() {
     // hands[currentPlayer].rigHand();
     // for (int i = 0; i < 3; ++i) {
     //   hands[i].findBestHand();
+    //   cout << playerNames[i] << "'s percentage: " << hands[i].getHandPercentage() << endl;
     // }
     // cout << endl << "Best Hand: Player " << getWinningHand() << endl;
   }
@@ -173,7 +176,7 @@ int DataController::getWinningHand() {
 
 }
 
-void DataController::addToPool(double sum) {
+void DataController::addToPool(long sum) {
 
   for (int i = 0; i < 3; ++i) {
     moneys[i] -= sum;
