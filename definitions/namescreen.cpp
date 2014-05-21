@@ -121,7 +121,9 @@ void NameScreen::setTextBoxText(unsigned char theChar) {
             nameError = true;
         }
       }
-      else if ( theChar >= 32 && theChar <= 126 ) { // check for printable character
+      else if ( (theChar >= (int)'a' && theChar <= (int)'z') || 
+                (theChar >= (int)'A' && theChar <= (int)'Z') ||
+                (theChar >= (int)'0' && theChar <= (int)'9')) { // check for number or letter
         // check that we don't overflow the box
         if ( textInBox[i].length() < 50 ) {
           textInBox[i] += theChar;
