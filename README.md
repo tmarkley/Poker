@@ -21,4 +21,4 @@ _This section is for those of you who are comfortable with Terminal or other con
   * Open Spotlight, type Terminal, and then select the Application.
 * Once Terminal is opened, type "cd " (that's "cd" followed by a space), and then click and drag the downloaded folder into Terminal.  You should see a green plus sign.  When you drop the files, it will autofill their path location.  Hit <Enter>.
 * Now, type "make" into the terminal and hit <Enter>.  It should appear to be doing things.
-* Once it has finished making, type "./poker" and hit <Enter>.  The game should now be running.  If not, feel free to send an email to andrew.c.crocker@gmail.com and I will gladly help you sort out any issues you might be having!
+* Once it has finished making, type "./poker" and hit <Enter>.  The game should now be running.  If not, feel free to send an email to andrew.c.crocker@gmail.com or tommymarkley@me.com and we will gladly help you sort out any issues you might be having!
